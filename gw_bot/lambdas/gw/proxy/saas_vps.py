@@ -1,99 +1,130 @@
 import base64
+import json
 
 from gw_bot.helpers.Lambda_Helpers import log_to_elk
 from osbot_aws.Dependencies import load_dependency
 
-def log_request(path, method, headers, domain_prefix,target):
-    data = { 'path': path,'method': method, 'headers':headers, 'domain_prefix':domain_prefix, 'target': target }
-    log_to_elk('proxy message', data)
+CONST_STACKOVERFLOW = 'stackoverflow'
+CONST_GLASSWALL = 'glasswall'
+CONST_GW_PROXY = 'gw-proxy'
 
-def run(event, context=None):
-    try:
-        load_dependency('requests')
-        import requests
-        path            = event.get('path','')
-        method          = event.get('httpMethod','')
-        headers         = event.get('headers',{})
-        domain_prefix   = event.get('requestContext',{}).get('domainPrefix')
+CONST_DEFAULT_SITE = 'https://glasswall-file-drop.azurewebsites.net{}'
+CONST_SITE_STACKOVERFLOW = 'https://stackoverflow.com{}'
+CONST_SITE_GLASSWALL = 'https://www.glasswallsolutions.com{}'
+
+CONST_BINARY_TYPES = [
+    "application/octet-stream",
+    "application/x-protobuf",
+    "application/x-tar",
+    "application/zip",
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/tiff",
+    "image/webp",
+    "image/jp2",
+    'font/woff',
+    'font/woff2'
+]
+
+CONST_ORIGINAL_GW_SITE = 'glasswallsolutions.com'
+CONST_REPLACED_GW_SITE = 'glasswall.gw-proxy.com'
+
+CONST_ORIGINAL_STACKOVERFLOW = 'Stack Overflow'
+CONST_REPLACED_STACKOVERFLOW = '<b>[CHANGED BY THE PROXY]</b>'
+
+CONST_SCHOOL_STEM = 'School STEM show hits the road'
+CONST_REPLACED_SCHOOL_STEM = 'BAE STOP with "Glasswall Inside" available in March 2020'
+
+CONST_PARTNERED = 'We have partnered with Royal Airforce and Royal ' \
+                  'Navy to take STEM to The Belvedore Academy in Liverpool'
+CONST_REPLACED_PARTNERED = 'Product available for pre-order ' \
+                           'at the <a href="http://glasswall-store.com/">Glasswall Store</a>'
+
+CONST_BAE_SYSTEMS_IMG = 'https://www.baesystems.com/en/download-en' \
+                        '/multimediaimage/webImage/20200214163601/1434644561633.jpg'
+CONST_REPLACED_BAE_SYSTEMS_IMG = 'https://user-images.githubusercontent.com/' \
+                                 '656739/74657297-d5f10a00-5187-11ea-908a-e9f8ca79d1fa.png'
+
+CONST_ANGER = 'Anger as historic car brand scrapped in Australia'
+CONST_REPLACED_ANGER = 'BAE STOP with "Glasswall Inside" available in March 2020'
+
+CONST_US_CAR_GIANT = 'The move comes as the US car giant ' \
+                     'retreats from more markets to focus on more profitable countries.'
+CONST_REPLACED_US_CAR_GIANT = 'Product available for ' \
+                              'pre-order at the <a href="http://glasswall-store.com/">Glasswall Store</a>'
 
 
-        request_headers = {'accept'         : headers.get('headers'        ),
-                           'User-Agent'     : headers.get('User-Agent'     ),
-                           'accept-encoding': headers.get('accept-encoding')}
+class SaasBase:
 
-        default_site = f'https://glasswall-file-drop.azurewebsites.net{path}'
-        if   domain_prefix == 'stackoverflow' : target = f'https://stackoverflow.com{path}'
-        elif domain_prefix == 'glasswall'     : target = f'https://www.glasswallsolutions.com{path}'
-        elif domain_prefix == 'gw-proxy'      : target = default_site
-        elif domain_prefix is not None        : target = f'https://{domain_prefix.replace("_",".")}{path}'
-        else: target = f'https://glasswall-file-drop.azurewebsites.net{path}'
+    @staticmethod
+    def domain_parser(domain_prefix, path):
+        if domain_prefix == CONST_STACKOVERFLOW:
+            return CONST_SITE_STACKOVERFLOW.format(path)
+        elif domain_prefix == CONST_GLASSWALL:
+            return CONST_SITE_GLASSWALL.format()
+        elif domain_prefix == CONST_GW_PROXY:
+            return CONST_DEFAULT_SITE.format(path)
+        elif domain_prefix is not None:
+            return f'https://{domain_prefix.replace("_", ".")}{path}'
+        return CONST_DEFAULT_SITE.format(path)
 
-        log_request(path, method, headers, domain_prefix, target)
+    @staticmethod
+    def log_request(path, method, headers, domain_prefix, target):
+        data = {'path': path, 'method': method, 'headers': headers, 'domain_prefix': domain_prefix, 'target': target}
+        log_to_elk('proxy message', data)
 
-        response = requests.get(target, headers=request_headers)
-
-
+    @staticmethod
+    def parse_response(response):
         response_headers = {}
-
-        response_body    = response.content
-
-        for key, value in response.headers.items():           # the original value of result.headers is not serializable
+        response_body = response.content
+        for key, value in response.headers.items():  # the original value of result.headers is not serializable
             if key != 'Content-Encoding':
                 response_headers[key] = str(value)
-
-        #response_headers = {'Content-Type': 'text/html; charset=UTF-8'}
-
-
         content_type = response_headers.get('Content-Type')
 
-        #message =  f'store saas will go here!!!: {event}'
-
-        binary_types = [
-            "application/octet-stream",
-            "application/x-protobuf",
-            "application/x-tar",
-            "application/zip",
-            "image/png",
-            "image/jpeg",
-            "image/jpg",
-            "image/tiff",
-            "image/webp",
-            "image/jp2",
-            'font/woff',
-            'font/woff2'
-        ]
-
-
-        if content_type in binary_types:
-            is_base_64=True
+        if content_type in CONST_BINARY_TYPES:
+            is_base_64 = True
             response_body = base64.b64encode(response_body).decode("utf-8")
         else:
             is_base_64 = False
             response_body = response.text
-
-            response_body = response_body.replace('glasswallsolutions.com', 'glasswall.gw-proxy.com')
-            response_body = response_body.replace('Stack Overflow', '<b>[CHANGED BY THE PROXY]</b>')
-
-            response_body = response_body.replace('School STEM show hits the road', 'BAE STOP with "Glasswall Inside" available in March 2020')  \
-                                         .replace('We have partnered with Royal Airforce and Royal Navy to take STEM to The Belvedore Academy in Liverpool', 'Product available for pre-order at the <a href="http://glasswall-store.com/">Glasswall Store</a>') \
-                                         .replace('https://www.baesystems.com/en/download-en/multimediaimage/webImage/20200214163601/1434644561633.jpg', 'https://user-images.githubusercontent.com/656739/74657297-d5f10a00-5187-11ea-908a-e9f8ca79d1fa.png') \
-                                         .replace('Anger as historic car brand scrapped in Australia','BAE STOP with "Glasswall Inside" available in March 2020') \
-                                         .replace('The move comes as the US car giant retreats from more markets to focus on more profitable countries.','Product available for pre-order at the <a href="http://glasswall-store.com/">Glasswall Store</a>')
-                                         #.replace('https://ichef.bbci.co.uk/news/240/cpsprodpb/AFAC/production/_110927944_gettyimages-175035206.jpg', 'https://user-images.githubusercontent.com/656739/74657297-d5f10a00-5187-11ea-908a-e9f8ca79d1fa.png')
-
-
+            response_body = response_body.replace(CONST_ORIGINAL_GW_SITE, CONST_REPLACED_GW_SITE) \
+                .replace(CONST_ORIGINAL_STACKOVERFLOW, CONST_REPLACED_STACKOVERFLOW) \
+                .replace(CONST_SCHOOL_STEM, CONST_REPLACED_SCHOOL_STEM) \
+                .replace(CONST_PARTNERED, CONST_REPLACED_PARTNERED) \
+                .replace(CONST_BAE_SYSTEMS_IMG, CONST_REPLACED_BAE_SYSTEMS_IMG) \
+                .replace(CONST_ANGER, CONST_REPLACED_ANGER) \
+                .replace(CONST_US_CAR_GIANT, CONST_REPLACED_US_CAR_GIANT)
         return {
             "isBase64Encoded": is_base_64,
-            "statusCode"     : 200,
-            "headers"        : response_headers,
-            "body"           : response_body
+            "statusCode": 200,
+            "headers": response_headers,
+            "body": response_body
         }
-    except Exception as error:
-        message = f'Reverse Proxy error: {error}'
-        log_to_elk('proxy message', message, level='error')
-        return {
-            "isBase64Encoded": False,
-            "statusCode"     : 500,
-            "headers"        : {},
-            "body"           : message
-        }
+
+
+class APISaasVPSClient(SaasBase):
+    """Quickly and easily send http request API."""
+
+    def __init__(self, event):
+        """
+        :param event: The event dictionary
+        """
+        self.path = event.get('path', '')
+        self.method = event.get('httpMethod', '')
+        self.headers = event.get('headers', {})
+        self.domain_prefix = event.get('requestContext', {}).get('domainPrefix')
+        self.request_headers = {'accept': self.headers.get('headers'),
+                                'User-Agent': self.headers.get('User-Agent'),
+                                'accept-encoding': self.headers.get('accept-encoding')}
+        self.target = self.domain_parser(self.domain_prefix, self.path)
+
+    def request(self):
+        """The actual http request
+        """
+        load_dependency('requests')
+        import requests
+        self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target)
+        response = requests.get(self.target, headers=self.request_headers)
+        return self.parse_response(response)

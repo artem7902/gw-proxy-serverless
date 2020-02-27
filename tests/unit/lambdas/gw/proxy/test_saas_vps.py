@@ -2,7 +2,7 @@
 from pbx_gs_python_utils.utils.Http import GET
 
 from gw_bot.helpers.Test_Helper import Test_Helper
-from gw_bot.lambdas.gw.proxy.saas_vps import run
+from gw_bot.lambdas.gw.proxy.saas_vps import APISaasVPSClient
 from osbot_aws.apis.API_Gateway import API_Gateway
 from osbot_aws.helpers.Rest_API import Rest_API
 
@@ -11,6 +11,7 @@ class test_saas_vps(Test_Helper):
     def setUp(self):
         super().setUp()
         self.aws_lambda = super().lambda_package('gw_bot.lambdas.gw.proxy.saas_vps')
+        self.client = APISaasVPSClient()
 
     def test_update_lambda(self):
         self.aws_lambda.update_code()
@@ -18,15 +19,15 @@ class test_saas_vps(Test_Helper):
     def test__invoke_directy(self):
         #payload = {'path':'/favicon-shard.png'}
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}}
-        self.result = run(payload, {})
+        self.result = self.client.request(payload)
 
     def test__invoke_directy__glasswall(self):
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {}, 'requestContext': {'domainPrefix': 'glasswall'} }
-        self.result = run(payload, {})
+        self.result = self.client.request(payload)
 
     def test__invoke_directy__send_firefox_com(self):
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {}, 'requestContext': {'domainPrefix': 'send_firefox_com'}}
-        self.result = run(payload, {})
+        self.result = self.client.request(payload)
 
     def test__invoke_via_lambda(self):
         #payload = {'path': '/favicon-shard.png'}
