@@ -144,7 +144,7 @@ class APISaasVPSClient(SaasBase):
         self.body = event.get('body', {})
 
     def request_get(self):
-        """The actual http request
+        """The GET http proxy API
         """
         try:
             load_dependency('requests')
@@ -156,7 +156,7 @@ class APISaasVPSClient(SaasBase):
             return SaasBase.server_error(RESPONSE_SERVER_ERROR)
 
     def request_post(self):
-        """The actual http request
+        """The POST http proxy API
         """
         try:
             load_dependency('requests')
