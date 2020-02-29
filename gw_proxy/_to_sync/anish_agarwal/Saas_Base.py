@@ -6,7 +6,7 @@ class Saas_Base:
     @staticmethod
     def domain_parser(cls, domain_prefix, path):
         if domain_prefix    == Proxy_Const.CONST_STACKOVERFLOW  : return Proxy_Const.CONST_SITE_STACKOVERFLOW.format(path)
-        elif domain_prefix  == Proxy_Const.CONST_GLASSWALL      : return Proxy_Const.CONST_SITE_GLASSWALL    .format()
+        elif domain_prefix  == Proxy_Const.CONST_GLASSWALL      : return Proxy_Const.CONST_SITE_GLASSWALL    .format()              # bug: Missing path reference on the Saas_Base.domain_parser method - https://github.com/filetrust/gw-proxy-serverless/issues/30
         elif domain_prefix  == Proxy_Const.CONST_GW_PROXY       : return Proxy_Const.CONST_DEFAULT_SITE      .format(path)
         elif domain_prefix is not None                          : return f'https://{domain_prefix.replace("_", ".")}{path}'
         return                                                           Proxy_Const.CONST_DEFAULT_SITE      .format(path)
