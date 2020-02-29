@@ -7,6 +7,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: GitHub Action for pytest
-      uses: filetrust/gw-proxy-serverless@master
+      uses: filetrust/gw-proxy-serverless@.github
       with:
         args: pytest -h
