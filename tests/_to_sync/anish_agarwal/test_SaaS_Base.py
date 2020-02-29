@@ -30,11 +30,17 @@ class test_SaaS_Base(TestCase):
         self.assertEqual(domain_parser('a:b@cc'       , None    ), 'https://a:b@cc'                                     ) # domain contain pwd
         self.assertEqual(domain_parser('aaa'          , '/../aa'), 'https://aaa/../aa'                                  ) # path transversal
 
+    def test_bad_request(self):
+        self.assertEquals(self.saas_base.bad_request('el-body'),  {'statusCode': 400, 'body': 'el-body'})
 
+    def test_server_error(self):
+        self.assertEquals(self.saas_base.server_error('el-body'),  {'statusCode': 500, 'body': 'el-body'})
 
-        #try:
-        #    print(Saas_Base().domain_parser(None, 'glasswall',None))
-        #except Exception as error:
-        #    assert error.args[0] =='Replacement index 0 out of range for positional args tuple'
+    def test_server_ok(self):
+        is_base_64 = False
+        headers    = {'an': 'header'}
+        body       = 'el-body'
+
+        self.assertEquals(self.saas_base.ok(headers, body,is_base_64),  {'isBase64Encoded': is_base_64, 'statusCode': 200, 'headers':headers, 'body': 'el-body'})
 
 

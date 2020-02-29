@@ -2,6 +2,8 @@ import base64
 from urllib.parse import urlunparse, ParseResult, urlparse
 
 from gw_proxy._to_sync.anish_agarwal import Proxy_Const
+from gw_proxy._to_sync.anish_agarwal.Proxy_Const import CONST_BINARY_TYPES
+
 
 class Saas_Base:
 
@@ -18,45 +20,30 @@ class Saas_Base:
                                      params=parsed_path.params, query =parsed_path.query, fragment=parsed_path.fragment))
         return url
 
-
-
-
-
-
-
+    @staticmethod
+    def bad_request(body):
+        return { "statusCode": 400 ,
+                 "body"     : f'{body}' }
 
     @staticmethod
-    def bad_request(cls, body):
-        return {
-            "statusCode": 400,
-            "body": body
-    }
-
+    def server_error(body):
+        return { "statusCode": 500 ,
+                "body"       : f'{body}' }
 
     @staticmethod
-    def server_error(cls, body):
-        return {
-            "statusCode": 500,
-            "body": body
-    }
-
-    @staticmethod
-    def ok(cls, headers, body, is_base_64):
-        return {
-            "isBase64Encoded": is_base_64,
-            "statusCode": 200,
-            "headers": headers,
-            "body": body
-    }
+    def ok(headers, body, is_base_64):
+        return { "isBase64Encoded": is_base_64,
+                 "statusCode"     : 200       ,
+                 "headers"        : headers   ,
+                 "body"           : body      }
 
     @staticmethod
     def log_request(path, method, headers, domain_prefix, target,body):
         data = {'path': path, 'method': method, 'headers': headers, \
                 'domain_prefix': domain_prefix, 'target': target, 'body': body}
-        log_to_elk('proxy message', data)
+        # log_to_elk('proxy message', data)         # todo: figure out best way to do this
 
-    @staticmethod
-    def parse_response(cls,response):
+    def parse_response(self,response):
         response_headers = {}
         response_body = response.content
         for key, value in response.headers.items():  # the original value of result.headers is not serializable
@@ -70,13 +57,13 @@ class Saas_Base:
         else:
             is_base_64 = False
             response_body = response.text
-            response_body = response_body.replace(CONST_ORIGINAL_GW_SITE, CONST_REPLACED_GW_SITE) \
-                .replace(CONST_ORIGINAL_STACKOVERFLOW, CONST_REPLACED_STACKOVERFLOW) \
-                .replace(CONST_SCHOOL_STEM, CONST_REPLACED_SCHOOL_STEM) \
-                .replace(CONST_PARTNERED, CONST_REPLACED_PARTNERED) \
-                .replace(CONST_BAE_SYSTEMS_IMG, CONST_REPLACED_BAE_SYSTEMS_IMG) \
-                .replace(CONST_ANGER, CONST_REPLACED_ANGER) \
-                .replace(CONST_US_CAR_GIANT, CONST_REPLACED_US_CAR_GIANT)
-        return cls.ok(response_headers, response_body, is_base_64)
+            # response_body = response_body.replace(CONST_ORIGINAL_GW_SITE, CONST_REPLACED_GW_SITE) \
+            #     .replace(CONST_ORIGINAL_STACKOVERFLOW, CONST_REPLACED_STACKOVERFLOW) \
+            #     .replace(CONST_SCHOOL_STEM, CONST_REPLACED_SCHOOL_STEM) \
+            #     .replace(CONST_PARTNERED, CONST_REPLACED_PARTNERED) \
+            #     .replace(CONST_BAE_SYSTEMS_IMG, CONST_REPLACED_BAE_SYSTEMS_IMG) \
+            #     .replace(CONST_ANGER, CONST_REPLACED_ANGER) \
+            #     .replace(CONST_US_CAR_GIANT, CONST_REPLACED_US_CAR_GIANT)
+        return self.ok(response_headers, response_body, is_base_64)
 
 
