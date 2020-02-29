@@ -165,4 +165,4 @@ class APISaasVPSClient(SaasBase):
             response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
             return SaasBase.parse_response(response)
         except Exception as e:
-            return SaasBase.bad_request(RESPONSE_BAD_REQUEST)
+            return SaasBase.bad_request(RESPONSE_SERVER_ERROR)
