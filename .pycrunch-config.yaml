@@ -1,0 +1,5 @@
+discovery:
+  exclusions:
+    - modules
+engine:
+  runtime: pytest
