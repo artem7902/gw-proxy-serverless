@@ -3,7 +3,7 @@ import requests
 from gw_proxy._to_sync.anish_agarwal.Saas_Base import Saas_Base
 
 
-class API_Saas_VPS_Client(Saas_Base):
+class API_SaaS_VPS_Client(Saas_Base):
     """Quickly and easily send http request API."""
 
     def __init__(self, event):
