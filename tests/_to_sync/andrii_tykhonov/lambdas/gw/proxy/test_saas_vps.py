@@ -1,21 +1,17 @@
 import unittest
 
 # create REST API that creates a proxy for multiple sites
+from unittest import TestCase
+
 from pbx_gs_python_utils.utils.Http import GET
 
-from gw_bot.helpers.Test_Helper import Test_Helper
-from gw_bot.lambdas.gw.proxy.saas_vps import run
-from osbot_aws.apis.API_Gateway import API_Gateway
-from osbot_aws.helpers.Rest_API import Rest_API
+from gw_proxy._to_sync.andrii_tykhonov.lambdas.gw.proxy.saas_vps import run
 
-class test_saas_vps(Test_Helper):
+
+class test_saas_vps(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.aws_lambda = super().lambda_package('gw_bot.lambdas.gw.proxy.saas_vps')
-
-    def test_update_lambda(self):
-        self.aws_lambda.update_code()
 
     def test__invoke_directy(self):
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}}
@@ -41,25 +37,24 @@ class test_saas_vps(Test_Helper):
         assert self.result['statusCode'] == 200
         assert 'Firefox Send' in self.result['body']
 
-    @unittest.skip('Fails because `requests` cannot be loaded')
-    def test__invoke_via_lambda(self):
-        payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}}
-        self.test_update_lambda()
+    # @unittest.skip('Fails because `requests` cannot be loaded')
+    # def test__invoke_via_lambda(self):
+    #     payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}}
+    #     self.test_update_lambda()
+    #
+    #     self.result = self.aws_lambda.invoke(payload)
+    #
+    #     assert self.result['statusCode'] == 200
+    #     assert 'Glasswall Solutions Ltd File Drop' in self.result['body']
 
-        self.result = self.aws_lambda.invoke(payload)
-
-        assert self.result['statusCode'] == 200
-        assert 'Glasswall Solutions Ltd File Drop' in self.result['body']
-
-    @unittest.skip('Fails because `requests` cannot be loaded')
-    def test__invoke_via_lambda__glasswall(self):
-        payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}, 'requestContext': {'domainPrefix': 'glasswall'} }
-        self.test_update_lambda()
-
-        self.result = self.aws_lambda.invoke(payload)
-
-        assert self.result['statusCode'] == 200
-        assert 'Glasswall Solutions Ltd File Drop' in self.result['body']
+    # @unittest.skip('Fails because `requests` cannot be loaded')
+    # def test__invoke_via_lambda__glasswall(self):
+    #     payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}, 'requestContext': {'domainPrefix': 'glasswall'} }
+    #
+    #     self.result = self.aws_lambda.invoke(payload)
+    #
+    #     assert self.result['statusCode'] == 200
+    #     assert 'Glasswall Solutions Ltd File Drop' in self.result['body']
 
     def test_invoke_directly_with_payload(self):
         payload = {
@@ -180,29 +175,29 @@ class test_saas_vps(Test_Helper):
 
 
 # this call and methods contain the multiple bits required to set up the proxy (todo: consolidate in one end-to-end solution to be executed on a clear AWS region/organisation)
-class test_Rest_API__SaaS_VPs(Test_Helper):
-
-    def setUp(self):
-        super().setUp()
-        self.api_name    = 'lambda-proxy'
-        self.lambda_name = 'gw_bot_lambdas_gw_proxy_saas_vps'
-        self.api_gateway = API_Gateway()
-
-    def test_setup_lambda_route(self):  # will create a {proxy+} integration
-        rest_api = Rest_API(self.api_name).create()
-        parent_id = rest_api.resource_id('/')
-        if not rest_api.api_gateway.rest_api_exists(rest_api.id()):
-            rest_api.api_gateway.resource_create(
-                rest_api.id(), parent_id, '{proxy+}')
-        self.result = rest_api.add_method_lambda(
-            '/', 'ANY', self.lambda_name)  # need to add both
-        self.result = rest_api.add_method_lambda(
-            '/{proxy+}', 'ANY', self.lambda_name)  # since this one wasn't catching the root requests
-        rest_api.deploy()
-
-    def test_deploy_api(self):
-        rest_api = Rest_API(self.api_name).create()
-        self.result = rest_api.deploy()
+# class test_Rest_API__SaaS_VPs(Test_Helper):
+#
+#     def setUp(self):
+#         super().setUp()
+#         self.api_name    = 'lambda-proxy'
+#         self.lambda_name = 'gw_bot_lambdas_gw_proxy_saas_vps'
+#         self.api_gateway = API_Gateway()
+#
+#     def test_setup_lambda_route(self):  # will create a {proxy+} integration
+#         rest_api = Rest_API(self.api_name).create()
+#         parent_id = rest_api.resource_id('/')
+#         if not rest_api.api_gateway.rest_api_exists(rest_api.id()):
+#             rest_api.api_gateway.resource_create(
+#                 rest_api.id(), parent_id, '{proxy+}')
+#         self.result = rest_api.add_method_lambda(
+#             '/', 'ANY', self.lambda_name)  # need to add both
+#         self.result = rest_api.add_method_lambda(
+#             '/{proxy+}', 'ANY', self.lambda_name)  # since this one wasn't catching the root requests
+#         rest_api.deploy()
+#
+#     def test_deploy_api(self):
+#         rest_api = Rest_API(self.api_name).create()
+#         self.result = rest_api.deploy()
 
     # here is the test that added the A record for both top level domain and child domains
     # def test_record_set_upsert(self):

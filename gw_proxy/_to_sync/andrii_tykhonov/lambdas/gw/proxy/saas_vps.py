@@ -1,20 +1,17 @@
-import abc
-import base64
+
 from http import HTTPStatus
 
-from gw_bot.api.proxy import Proxy, ResponseHandler
-from gw_bot.helpers.Lambda_Helpers import log_error, log_to_elk
-from osbot_aws.Dependencies import load_dependency
+from gw_proxy._to_sync.andrii_tykhonov.api.Response_Handler import Response_Handler
+from gw_proxy._to_sync.andrii_tykhonov.api.proxy import Proxy
 
-
-so_resp_handler = ResponseHandler(
+so_resp_handler = Response_Handler(
     'Stack Overflow', '<b>[CHANGED BY THE PROXY]</b>')
 
 pre_order = (
     'Product available for pre-order at the '
     '<a href="http://glasswall-store.com/">Glasswall Store</a>'
 )
-gws_resp_handler = ResponseHandler(
+gws_resp_handler = Response_Handler(
     [
         'glasswallsolutions.com',
         ('We have partnered with Royal Airforce and Royal Navy to '
@@ -50,7 +47,7 @@ def run(event, context):
         return proxy.handle_request(event, response_handler=item[1])
     except Exception as error:
         message = f'[gw_proxy] {error}'
-        log_error('Error in Lambda', {'text': message})
+        #log_error('Error in Lambda', {'text': message})
         return {
             'error' : message,
             'statusCode': HTTPStatus.INTERNAL_SERVER_ERROR.value,

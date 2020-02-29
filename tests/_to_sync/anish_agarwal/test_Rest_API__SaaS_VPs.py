@@ -1,24 +1,24 @@
 
-class test_Rest_API__SaaS_VPs(Test_Helper):
-
-    def setUp(self):
-        super().setUp()
-        self.api_name    = 'lambda-proxy'
-        self.lambda_name = 'gw_bot_lambdas_gw_proxy_saas_vps'
-        self.api_gateway = API_Gateway()
-
-    def test_setup_lambda_route(self):                      # will create a {proxy+} integration
-        rest_api    = Rest_API(self.api_name).create()
-        parent_id = rest_api.resource_id('/')
-        rest_api.api_gateway.resource_create(rest_api.id(),parent_id,'{proxy+}')
-        self.result = rest_api.add_method_lambda('/'        , 'ANY', self.lambda_name)  # need to add both
-        self.result = rest_api.add_method_lambda('/{proxy+}', 'ANY', self.lambda_name)  # since this one wasn't catching the root requests
-        rest_api.deploy()
-        #self.result = rest_api.test_method('/','GET')
-
-    def test_deploy_api(self):
-        rest_api = Rest_API(self.api_name).create()
-        self.result = rest_api.deploy()
+# class test_Rest_API__SaaS_VPs(Test_Helper):
+#
+#     def setUp(self):
+#         super().setUp()
+#         self.api_name    = 'lambda-proxy'
+#         self.lambda_name = 'gw_bot_lambdas_gw_proxy_saas_vps'
+#         self.api_gateway = API_Gateway()
+#
+#     def test_setup_lambda_route(self):                      # will create a {proxy+} integration
+#         rest_api    = Rest_API(self.api_name).create()
+#         parent_id = rest_api.resource_id('/')
+#         rest_api.api_gateway.resource_create(rest_api.id(),parent_id,'{proxy+}')
+#         self.result = rest_api.add_method_lambda('/'        , 'ANY', self.lambda_name)  # need to add both
+#         self.result = rest_api.add_method_lambda('/{proxy+}', 'ANY', self.lambda_name)  # since this one wasn't catching the root requests
+#         rest_api.deploy()
+#         #self.result = rest_api.test_method('/','GET')
+#
+#     def test_deploy_api(self):
+#         rest_api = Rest_API(self.api_name).create()
+#         self.result = rest_api.deploy()
 
     # here is the test that added the A record for both top level domain and child domains
     # def test_record_set_upsert(self):
