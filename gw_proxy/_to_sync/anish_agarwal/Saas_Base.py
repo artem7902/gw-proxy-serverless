@@ -1,21 +1,22 @@
 import base64
-import json
-import requests
+from Proxy_Const import *
+
+from gw_proxy._to_sync.anish_agarwal import Proxy_Const
 
 
 class Saas_Base:
 
     @staticmethod
     def domain_parser(cls, domain_prefix, path):
-        if domain_prefix == CONST_STACKOVERFLOW:
-            return CONST_SITE_STACKOVERFLOW.format(path)
-        elif domain_prefix == CONST_GLASSWALL:
-            return CONST_SITE_GLASSWALL.format()
-        elif domain_prefix == CONST_GW_PROXY:
-            return CONST_DEFAULT_SITE.format(path)
+        if domain_prefix == Proxy_Const.CONST_STACKOVERFLOW:
+            return Proxy_Const.CONST_SITE_STACKOVERFLOW.format(path)
+        elif domain_prefix == Proxy_Const.CONST_GLASSWALL:
+            return Proxy_Const.CONST_SITE_GLASSWALL.format()
+        elif domain_prefix == Proxy_Const.CONST_GW_PROXY:
+            return Proxy_Const.CONST_DEFAULT_SITE.format(path)
         elif domain_prefix is not None:
             return f'https://{domain_prefix.replace("_", ".")}{path}'
-        return CONST_DEFAULT_SITE.format(path)
+        return Proxy_Const.CONST_DEFAULT_SITE.format(path)
 
     @staticmethod
     def bad_request(cls, body):
