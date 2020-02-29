@@ -1,4 +1,3 @@
-Learn more or give us feedback
 import base64
 from http import HTTPStatus
 

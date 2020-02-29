@@ -1,9 +1,6 @@
 import base64
 import json
-
-from gw_bot.helpers.Lambda_Helpers import log_to_elk
-from osbot_aws.Dependencies import load_dependency
-
+import requests
 CONST_STACKOVERFLOW = 'stackoverflow'
 CONST_GLASSWALL = 'glasswall'
 CONST_GW_PROXY = 'gw-proxy'
@@ -57,7 +54,7 @@ CONST_REPLACED_US_CAR_GIANT = 'Product available for ' \
 RESPONSE_BAD_REQUEST = 'Request body was invalid'
 RESPONSE_SERVER_ERROR = 'A server error was encountered while processing the request'
 
-class SaasBase:
+class Saas_Base:
 
     @staticmethod
     def domain_parser(cls, domain_prefix, path):
@@ -126,43 +123,3 @@ class SaasBase:
         return cls.ok(response_headers, response_body, is_base_64)
 
 
-class APISaasVPSClient(SaasBase):
-    """Quickly and easily send http request API."""
-
-    def __init__(self, event):
-        """
-        :param event: The event dictionary
-        """
-        self.path = event.get('path', '')
-        self.method = event.get('httpMethod', '')
-        self.headers = event.get('headers', {})
-        self.domain_prefix = event.get('requestContext', {}).get('domainPrefix')
-        self.request_headers = {'accept': self.headers.get('headers'),
-                                'User-Agent': self.headers.get('User-Agent'),
-                                'accept-encoding': self.headers.get('accept-encoding')}
-        self.target = self.domain_parser(self.domain_prefix, self.path)
-        self.body = event.get('body', {})
-
-    def request_get(self):
-        """The GET http proxy API
-        """
-        try:
-            load_dependency('requests')
-            import requests
-            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, , self.body)
-            response = requests.get(self.target, headers=self.request_headers)
-            return self.parse_response(response)
-        except Exception as e:
-            return SaasBase.server_error(RESPONSE_SERVER_ERROR)
-
-    def request_post(self):
-        """The POST http proxy API
-        """
-        try:
-            load_dependency('requests')
-            import requests
-            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
-            response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
-            return SaasBase.parse_response(response)
-        except Exception as e:
-            return SaasBase.bad_request(RESPONSE_SERVER_ERROR)
