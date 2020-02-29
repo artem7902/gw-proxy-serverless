@@ -1,0 +1,12 @@
+on: push
+name: on push
+jobs:
+  gitHubActionForPytest:
+    name: Run pytest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: GitHub Action for pytest
+      uses: filetrust/gw-proxy-serverless@master
+      with:
+        args: pytest -h
