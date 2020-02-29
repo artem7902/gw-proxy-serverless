@@ -31,16 +31,16 @@ class test_SaaS_Base(TestCase):
         self.assertEqual(domain_parser('aaa'          , '/../aa'), 'https://aaa/../aa'                                  ) # path transversal
 
     def test_bad_request(self):
-        self.assertEquals(self.saas_base.bad_request('el-body'),  {'statusCode': 400, 'body': 'el-body'})
+        self.assertEqual(self.saas_base.bad_request('el-body'),  {'statusCode': 400, 'body': 'el-body'})
 
     def test_server_error(self):
-        self.assertEquals(self.saas_base.server_error('el-body'),  {'statusCode': 500, 'body': 'el-body'})
+        self.assertEqual(self.saas_base.server_error('el-body'),  {'statusCode': 500, 'body': 'el-body'})
 
     def test_server_ok(self):
         is_base_64 = False
         headers    = {'an': 'header'}
         body       = 'el-body'
 
-        self.assertEquals(self.saas_base.ok(headers, body,is_base_64),  {'isBase64Encoded': is_base_64, 'statusCode': 200, 'headers':headers, 'body': 'el-body'})
+        self.assertEqual(self.saas_base.ok(headers, body,is_base_64),  {'isBase64Encoded': is_base_64, 'statusCode': 200, 'headers':headers, 'body': 'el-body'})
 
 
