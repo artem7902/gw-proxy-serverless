@@ -1,7 +1,6 @@
 import base64
 from gw_proxy._to_sync.anish_agarwal import Proxy_Const
 
-
 class Saas_Base:
 
     @staticmethod
@@ -11,6 +10,12 @@ class Saas_Base:
         elif domain_prefix  == Proxy_Const.CONST_GW_PROXY       : return Proxy_Const.CONST_DEFAULT_SITE      .format(path)
         elif domain_prefix is not None                          : return f'https://{domain_prefix.replace("_", ".")}{path}'
         return                                                           Proxy_Const.CONST_DEFAULT_SITE      .format(path)
+
+
+
+
+
+
 
     @staticmethod
     def bad_request(cls, body):
