@@ -9,4 +9,4 @@ jobs:
     - name: GitHub Action for pytest
       uses: filetrust/gw-proxy-serverless@adding-github-actions
       with:
-        args: pytest -h
+        args: pytest tests
