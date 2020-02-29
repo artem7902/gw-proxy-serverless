@@ -1,6 +1,4 @@
 import base64
-from Proxy_Const import *
-
 from gw_proxy._to_sync.anish_agarwal import Proxy_Const
 
 
