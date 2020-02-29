@@ -1,9 +1,9 @@
 import base64
 from http import HTTPStatus
 
-from gw_bot.helpers.Lambda_Helpers import log_to_elk
-from osbot_aws.Dependencies import load_dependency
-
+#from gw_bot.helpers.Lambda_Helpers import log_to_elk
+#from osbot_aws.Dependencies import load_dependency
+import requests
 
 BINARY_CONTENT_TYPES = [
     'application/octet-stream',
@@ -34,7 +34,7 @@ class Proxy():
             'domain_prefix': domain_prefix,
             'target': target,
         }
-        log_to_elk('proxy message', data)
+        #log_to_elk('proxy message', data)
 
     def is_binary_content_type(self, response):
         return response.headers.get('Content-Type') in BINARY_CONTENT_TYPES
@@ -58,7 +58,7 @@ class Proxy():
         }
 
     def handle_request(self, event, response_handler=None):
-        load_dependency('requests')
+        #load_dependency('requests')
         import requests
         path = event.get('path', '')
         method = event.get('httpMethod', '')
@@ -89,29 +89,7 @@ class Proxy():
             )
         except Exception as error:
             message = f'Proxy error: {error}'
-            log_to_elk('proxy message', message, level='error')
-            return self.response(
-                False, HTTPStatus.INTERNAL_SERVER_ERROR.value, headers, message
-            )
+            #log_to_elk('proxy message', message, level='error')
+            return self.response(False, HTTPStatus.INTERNAL_SERVER_ERROR.value, headers, message)
 
 
-class ResponseHandler():
-
-    def __init__(self, search, replace):
-        """
-        Initiate a handler with `search` and `replace`. They both should
-        be of type either string or list. In the case of strings the
-        `search` is searched in a response and replaced by
-        `replace`. In the case of list each element from `search` is
-        searched in a response and replaced by an appropriate element
-        from `replace`.
-        """
-        self.search = [search] if isinstance(search, str) else search
-        self.replace = [replace] if isinstance(search, str) else replace
-        if len(self.search) != len(self.replace):
-            raise ValueError('Lenghts of `search` and `replace` are not equal')
-
-    def process(self, response):
-        for i, s in enumerate(self.search):
-            response = response.replace(s, self.replace[i])
-        return response

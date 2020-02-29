@@ -1,5 +1,4 @@
-# this call and methods contain the multiple bits required to set up the proxy (todo: consolidate in one end-to-end
-#  solution to be executed on a clear AWS region/organisation)
+
 class test_Rest_API__SaaS_VPs(Test_Helper):
 
     def setUp(self):

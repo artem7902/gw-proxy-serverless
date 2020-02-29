@@ -1,54 +1,13 @@
 from http import HTTPStatus
-from unittest import mock
+from unittest import mock, TestCase
 
 from pbx_gs_python_utils.utils.Http import GET
 
-from gw_bot.helpers.Test_Helper import Test_Helper
-from gw_bot.api.proxy import Proxy, ResponseHandler
-from osbot_aws.apis.API_Gateway import API_Gateway
-from osbot_aws.helpers.Rest_API import Rest_API
+from gw_proxy._to_sync.andrii_tykhonov.api.Response_Handler import Response_Handler
+from gw_proxy._to_sync.andrii_tykhonov.api.proxy import Proxy
 
 
-class test_response_handler(Test_Helper):
-
-    def test_strings(self):
-        search = 'foo'
-        replace = 'bar'
-        handler = ResponseHandler(search, replace)
-
-        response = handler.process('foobarbaz')
-
-        assert response == 'barbarbaz'
-
-    def test_lists(self):
-        search = ['foo']
-        replace = ['bar']
-        handler = ResponseHandler(search, replace)
-
-        response = handler.process('foobarbaz')
-
-        assert response == 'barbarbaz'
-
-    def test_lists_multiple_items(self):
-        search = ['foo', 'baz']
-        replace = ['bar', 'jaz']
-        handler = ResponseHandler(search, replace)
-
-        response = handler.process('foobarbaz')
-
-        assert response == 'barbarjaz'
-
-    def test_unequal_lists(self):
-        search = ['foo', 'baz']
-        replace = ['bar']
-        try:
-            handler = ResponseHandler(search, replace)
-        except ValueError as error:
-            msg = 'Lenghts of `search` and `replace` are not equal'
-            assert error.args[0] == msg
-
-
-class test_proxy(Test_Helper):
+class test_proxy(TestCase):
 
     def setUp(self):
         self.proxy = Proxy('http://example.com')
@@ -57,9 +16,7 @@ class test_proxy(Test_Helper):
 
     @mock.patch('requests.get')
     def test_handle_response(self, mockget):
-        headers = {
-            'Content-Type': 'text',
-        }
+        headers = { 'Content-Type': 'text'}
         attrs = {'headers.return_value': headers}
         response = mock.Mock(**attrs)
         response.headers = headers

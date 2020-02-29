@@ -39,7 +39,7 @@ class Saas_Base:
 
     @staticmethod
     def log_request(path, method, headers, domain_prefix, target,body):
-        data = {'path': path, 'method': method, 'headers': headers, \
+        data = {'path': path, 'method': method, 'headers': headers, 
                 'domain_prefix': domain_prefix, 'target': target, 'body': body}
         # log_to_elk('proxy message', data)         # todo: figure out best way to do this
 

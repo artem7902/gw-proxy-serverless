@@ -1,6 +1,9 @@
+import json
+
 import requests
 
-from gw_proxy._to_sync.anish_agarwal.Saas_Base import Saas_Base
+from gw_proxy._to_sync.anish_agarwal.Proxy_Const import RESPONSE_SERVER_ERROR
+from gw_proxy._to_sync.anish_agarwal.Saas_Base   import Saas_Base
 
 
 class API_SaaS_VPS_Client(Saas_Base):
@@ -24,8 +27,7 @@ class API_SaaS_VPS_Client(Saas_Base):
         """The GET http proxy API
         """
         try:
-
-            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, , self.body)
+            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
             response = requests.get(self.target, headers=self.request_headers)
             return self.parse_response(response)
         except Exception as e:
@@ -37,6 +39,6 @@ class API_SaaS_VPS_Client(Saas_Base):
         try:
             self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
             response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
-            return SaasBase.parse_response(response)
+            return Saas_Base.parse_response(response)
         except Exception as e:
-            return SaasBase.bad_request(RESPONSE_SERVER_ERROR)
+            return Saas_Base.bad_request(RESPONSE_SERVER_ERROR)
