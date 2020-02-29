@@ -4,29 +4,31 @@ from gw_proxy._to_sync.anish_agarwal.Saas_Base import Saas_Base
 
 
 class test_SaaS_Base(TestCase):
+    def setUp(self):
+        self.saas_base = Saas_Base()
 
     def test_domain_parser(self):
-        self.assertEqual(Saas_Base().domain_parser(None, 'stackoverflow', '/AAAAA'), 'https://stackoverflow.com/AAAAA'                    )
-        self.assertEqual(Saas_Base().domain_parser(None, 'glasswall'    , '/AAAAA'), 'https://www.glasswallsolutions.com/AAAAA'           )
-        self.assertEqual(Saas_Base().domain_parser(None, 'gw-proxy'     , '/AAAAA'), 'https://glasswall-file-drop.azurewebsites.net/AAAAA')
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , '/AAAAA'), 'https://aaaa/AAAAA'                                 )
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , '/A?a=b'), 'https://aaaa/A?a=b'                                 )
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , '/A#a=b'), 'https://aaaa/A#a=b'                                 )
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , '/A?a#b'), 'https://aaaa/A?a#b'                                 )
-        self.assertEqual(Saas_Base().domain_parser(None, None           , '/AAAAA'), 'https://glasswall-file-drop.azurewebsites.net/AAAAA')
+        domain_parser = self.saas_base.domain_parser
+        self.assertEqual(domain_parser('stackoverflow', '/AAAAA'), 'https://stackoverflow.com/AAAAA'                    )
+        self.assertEqual(domain_parser('glasswall'    , '/AAAAA'), 'https://www.glasswallsolutions.com/AAAAA'           )
+        self.assertEqual(domain_parser('gw-proxy'     , '/AAAAA'), 'https://glasswall-file-drop.azurewebsites.net/AAAAA')
+        self.assertEqual(domain_parser('aaaa'         , '/AAAAA'), 'https://aaaa/AAAAA'                                 )
+        self.assertEqual(domain_parser('aaaa'         , '/A?a=b'), 'https://aaaa/A?a=b'                                 )
+        self.assertEqual(domain_parser('aaaa'         , '/A#a=b'), 'https://aaaa/A#a=b'                                 )
+        self.assertEqual(domain_parser('aaaa'         , '/A?a#b'), 'https://aaaa/A?a#b'                                 )
+        self.assertEqual(domain_parser('aaaa'         , 'BBB'   ), 'https://aaaa/BBB'                                   )
 
-        ## todo: improve handling of these edge cases:
-
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , None    ), 'https://aaaaNone'                                   ) # None ends in path
-        self.assertEqual(Saas_Base().domain_parser(None, 'aaaa'         , 'BBB'   ), 'https://aaaaBBB'                                    ) # path breaks url
-        self.assertEqual(Saas_Base().domain_parser('--', 'aaaa'         , None    ), 'https://aaaaNone'                                   ) # cls value is not used
+        ## handle null values
+        self.assertEqual(domain_parser(None           , '/AAAAA'), 'https://glasswall-file-drop.azurewebsites.net/AAAAA')
+        self.assertEqual(domain_parser('aaaa'         , None    ), 'https://aaaa'                                       )
+        self.assertEqual(domain_parser('aaaa'         , None    ), 'https://aaaa'                                       ) # cls value is not used
 
         ## with security implications
 
-        self.assertEqual(Saas_Base().domain_parser('--', 'abc.com/aaa/' , None    ), 'https://abc.com/aaa/None'                           ) # domain adds path
-        self.assertEqual(Saas_Base().domain_parser('--', '../aaa/'      , None    ), 'https://../aaa/None'                                ) # invalid domain
-        self.assertEqual(Saas_Base().domain_parser('--', 'a:b@cc'       , None    ), 'https://a:b@ccNone'                                 ) # domain contain pwd
-        self.assertEqual(Saas_Base().domain_parser('--', 'aaa'          , '/../aa'), 'https://aaa/../aa'                                  ) # path transversal
+        self.assertEqual(domain_parser('abc.com/aaa/' , None    ), 'https://abc.com/aaa/'                               ) # domain adds path
+        self.assertEqual(domain_parser('../aaa/'      , None    ), 'https://../aaa/'                                    ) # invalid domain
+        self.assertEqual(domain_parser('a:b@cc'       , None    ), 'https://a:b@cc'                                     ) # domain contain pwd
+        self.assertEqual(domain_parser('aaa'          , '/../aa'), 'https://aaa/../aa'                                  ) # path transversal
 
 
 

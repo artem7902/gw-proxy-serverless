@@ -6,7 +6,7 @@ from gw_proxy._to_sync.anish_agarwal import Proxy_Const
 class Saas_Base:
 
     @staticmethod
-    def domain_parser(cls, domain_prefix, path):
+    def domain_parser(domain_prefix, path):
         if   domain_prefix  == Proxy_Const.CONST_STACKOVERFLOW  : target_domain = Proxy_Const.CONST_SITE_STACKOVERFLOW
         elif domain_prefix  == Proxy_Const.CONST_GLASSWALL      : target_domain = Proxy_Const.CONST_SITE_GLASSWALL
         elif domain_prefix  == Proxy_Const.CONST_GW_PROXY       : target_domain = Proxy_Const.CONST_DEFAULT_SITE
