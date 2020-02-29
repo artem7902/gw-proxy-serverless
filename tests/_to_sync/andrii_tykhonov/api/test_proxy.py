@@ -1,9 +1,5 @@
 from http import HTTPStatus
 from unittest import mock, TestCase
-
-from pbx_gs_python_utils.utils.Http import GET
-
-from gw_proxy._to_sync.andrii_tykhonov.api.Response_Handler import Response_Handler
 from gw_proxy._to_sync.andrii_tykhonov.api.proxy import Proxy
 
 
