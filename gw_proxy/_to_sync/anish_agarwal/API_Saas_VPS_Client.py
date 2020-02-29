@@ -1,3 +1,5 @@
+import requests
+
 from gw_proxy._to_sync.anish_agarwal.Saas_Base import Saas_Base
 
 
@@ -27,7 +29,7 @@ class API_Saas_VPS_Client(Saas_Base):
             response = requests.get(self.target, headers=self.request_headers)
             return self.parse_response(response)
         except Exception as e:
-            return SaasBase.server_error(RESPONSE_SERVER_ERROR)
+            return Saas_Base.server_error(RESPONSE_SERVER_ERROR)
 
     def request_post(self):
         """The POST http proxy API
