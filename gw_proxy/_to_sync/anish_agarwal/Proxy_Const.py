@@ -2,9 +2,9 @@ CONST_STACKOVERFLOW            = 'stackoverflow'
 CONST_GLASSWALL                = 'glasswall'
 CONST_GW_PROXY                 = 'gw-proxy'
 
-CONST_DEFAULT_SITE             = 'https://glasswall-file-drop.azurewebsites.net{}'
-CONST_SITE_STACKOVERFLOW       = 'https://stackoverflow.com{}'
-CONST_SITE_GLASSWALL           = 'https://www.glasswallsolutions.com{}'
+CONST_DEFAULT_SITE             = 'glasswall-file-drop.azurewebsites.net'
+CONST_SITE_STACKOVERFLOW       = 'stackoverflow.com'
+CONST_SITE_GLASSWALL           = 'www.glasswallsolutions.com'
 
 CONST_BINARY_TYPES             = [  "application/octet-stream"  ,
                                     "application/x-protobuf"    ,
@@ -18,7 +18,7 @@ CONST_BINARY_TYPES             = [  "application/octet-stream"  ,
                                     "image/jp2"                 ,
                                     'font/woff'                 ,
                                     'font/woff2'                ]
-      
+
 CONST_ORIGINAL_GW_SITE         = 'glasswallsolutions.com'
 CONST_REPLACED_GW_SITE         = 'glasswall.gw-proxy.com'
 

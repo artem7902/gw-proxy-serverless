@@ -1,15 +1,23 @@
 import base64
+from urllib.parse import urlunparse, ParseResult, urlparse
+
 from gw_proxy._to_sync.anish_agarwal import Proxy_Const
 
 class Saas_Base:
 
     @staticmethod
     def domain_parser(cls, domain_prefix, path):
-        if domain_prefix    == Proxy_Const.CONST_STACKOVERFLOW  : return Proxy_Const.CONST_SITE_STACKOVERFLOW.format(path)
-        elif domain_prefix  == Proxy_Const.CONST_GLASSWALL      : return Proxy_Const.CONST_SITE_GLASSWALL    .format()              # bug: Missing path reference on the Saas_Base.domain_parser method - https://github.com/filetrust/gw-proxy-serverless/issues/30
-        elif domain_prefix  == Proxy_Const.CONST_GW_PROXY       : return Proxy_Const.CONST_DEFAULT_SITE      .format(path)
-        elif domain_prefix is not None                          : return f'https://{domain_prefix.replace("_", ".")}{path}'
-        return                                                           Proxy_Const.CONST_DEFAULT_SITE      .format(path)
+        if   domain_prefix  == Proxy_Const.CONST_STACKOVERFLOW  : target_domain = Proxy_Const.CONST_SITE_STACKOVERFLOW
+        elif domain_prefix  == Proxy_Const.CONST_GLASSWALL      : target_domain = Proxy_Const.CONST_SITE_GLASSWALL
+        elif domain_prefix  == Proxy_Const.CONST_GW_PROXY       : target_domain = Proxy_Const.CONST_DEFAULT_SITE
+        elif domain_prefix is not None                          : target_domain = domain_prefix.replace("_", ".")
+        else                                                    : target_domain = Proxy_Const.CONST_DEFAULT_SITE
+
+        parsed_path = urlparse(path or '')
+        url = urlunparse(ParseResult(scheme='https'           , netloc=target_domain    , path     =parsed_path.path,
+                                     params=parsed_path.params, query =parsed_path.query, fragment=parsed_path.fragment))
+        return url
+
 
 
 
