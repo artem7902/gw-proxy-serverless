@@ -19,15 +19,15 @@ class test_saas_vps(Test_Helper):
     def test__invoke_directy(self):
         #payload = {'path':'/favicon-shard.png'}
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}}
-        self.result = self.client.request(payload)
+        self.result = self.client.request_get(payload)
 
     def test__invoke_directy__glasswall(self):
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {}, 'requestContext': {'domainPrefix': 'glasswall'} }
-        self.result = self.client.request(payload)
+        self.result = self.client.request_get(payload)
 
     def test__invoke_directy__send_firefox_com(self):
         payload = {'path': '/', 'httpMethod': 'GET', 'headers': {}, 'requestContext': {'domainPrefix': 'send_firefox_com'}}
-        self.result = self.client.request(payload)
+        self.result = self.client.request_get(payload)
 
     def test__invoke_via_lambda(self):
         #payload = {'path': '/favicon-shard.png'}

@@ -54,11 +54,13 @@ CONST_US_CAR_GIANT = 'The move comes as the US car giant ' \
 CONST_REPLACED_US_CAR_GIANT = 'Product available for ' \
                               'pre-order at the <a href="http://glasswall-store.com/">Glasswall Store</a>'
 
+RESPONSE_BAD_REQUEST = 'Request body was invalid'
+RESPONSE_SERVER_ERROR = 'A server error was encountered while processing the request'
 
 class SaasBase:
 
     @staticmethod
-    def domain_parser(domain_prefix, path):
+    def domain_parser(cls, domain_prefix, path):
         if domain_prefix == CONST_STACKOVERFLOW:
             return CONST_SITE_STACKOVERFLOW.format(path)
         elif domain_prefix == CONST_GLASSWALL:
@@ -70,12 +72,37 @@ class SaasBase:
         return CONST_DEFAULT_SITE.format(path)
 
     @staticmethod
-    def log_request(path, method, headers, domain_prefix, target):
-        data = {'path': path, 'method': method, 'headers': headers, 'domain_prefix': domain_prefix, 'target': target}
+    def bad_request(cls, body):
+        return {
+            "statusCode": 400,
+            "body": body
+    }
+
+
+    @staticmethod
+    def server_error(cls, body):
+        return {
+            "statusCode": 500,
+            "body": body
+    }
+
+    @staticmethod
+    def ok(cls, headers, body, is_base_64):
+        return {
+            "isBase64Encoded": is_base_64,
+            "statusCode": 200,
+            "headers": headers,
+            "body": body
+    }
+
+    @staticmethod
+    def log_request(path, method, headers, domain_prefix, target,body):
+        data = {'path': path, 'method': method, 'headers': headers, \
+                'domain_prefix': domain_prefix, 'target': target, 'body': body}
         log_to_elk('proxy message', data)
 
     @staticmethod
-    def parse_response(response):
+    def parse_response(cls,response):
         response_headers = {}
         response_body = response.content
         for key, value in response.headers.items():  # the original value of result.headers is not serializable
@@ -96,12 +123,7 @@ class SaasBase:
                 .replace(CONST_BAE_SYSTEMS_IMG, CONST_REPLACED_BAE_SYSTEMS_IMG) \
                 .replace(CONST_ANGER, CONST_REPLACED_ANGER) \
                 .replace(CONST_US_CAR_GIANT, CONST_REPLACED_US_CAR_GIANT)
-        return {
-            "isBase64Encoded": is_base_64,
-            "statusCode": 200,
-            "headers": response_headers,
-            "body": response_body
-        }
+        return cls.ok(response_headers, response_body, is_base_64)
 
 
 class APISaasVPSClient(SaasBase):
@@ -119,12 +141,28 @@ class APISaasVPSClient(SaasBase):
                                 'User-Agent': self.headers.get('User-Agent'),
                                 'accept-encoding': self.headers.get('accept-encoding')}
         self.target = self.domain_parser(self.domain_prefix, self.path)
+        self.body = event.get('body', {})
 
-    def request(self):
+    def request_get(self):
         """The actual http request
         """
-        load_dependency('requests')
-        import requests
-        self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target)
-        response = requests.get(self.target, headers=self.request_headers)
-        return self.parse_response(response)
+        try:
+            load_dependency('requests')
+            import requests
+            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, , self.body)
+            response = requests.get(self.target, headers=self.request_headers)
+            return self.parse_response(response)
+        except Exception as e:
+            return SaasBase.server_error(RESPONSE_SERVER_ERROR)
+
+    def request_post(self):
+        """The actual http request
+        """
+        try:
+            load_dependency('requests')
+            import requests
+            self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
+            response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
+            return SaasBase.parse_response(response)
+        except Exception as e:
+            return SaasBase.bad_request(RESPONSE_BAD_REQUEST)
