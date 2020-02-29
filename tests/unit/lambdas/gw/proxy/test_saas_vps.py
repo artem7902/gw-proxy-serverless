@@ -56,13 +56,13 @@ class test_saas_vps(Test_Helper):
         self.result = self.client.request_get(payload)
 
     def test__invoke__post_via_lambda(self):
-        payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'}
+        payload = {'path': '/', 'httpMethod': 'POST', 'headers': {'aaa': 'bbbb'}
                    , 'body': {'user': 'someuser', 'password': 'somepass#543'}}
         self.test_update_lambda()
         self.result = self.aws_lambda.invoke(payload)
 
     def test__invoke__post_via_lambda__glasswall(self):
-        payload = {'path': '/', 'httpMethod': 'GET', 'headers': {'aaa': 'bbbb'},
+        payload = {'path': '/', 'httpMethod': 'POST', 'headers': {'aaa': 'bbbb'},
                    'requestContext': {'domainPrefix': 'glasswall'}
                    , 'body': {'user': 'someuser', 'password': 'somepass#543'}}
         self.test_update_lambda()
