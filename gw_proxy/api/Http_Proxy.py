@@ -3,11 +3,12 @@ import json
 
 import requests
 
+from gw_proxy._to_sync.andrii_tykhonov.api.proxy import BINARY_CONTENT_TYPES
 from gw_proxy._to_sync.anish_agarwal.Proxy_Const import CONST_BINARY_TYPES, RESPONSE_SERVER_ERROR
 
 class Http_Proxy:
 
-    def __init__(self, body, path, headers, method, target):
+    def __init__(self, target, path='', method='GET', body='', headers={}):
         self.body            = body
         self.path            = path
         self.headers         = headers
@@ -18,29 +19,27 @@ class Http_Proxy:
                                  'User-Agent'     : self.headers.get('User-Agent'     ),
                                  'accept-encoding': self.headers.get('accept-encoding')}
 
-    
-    def request_get(self):
-        """The GET http proxy API
-        """
-        try:
-            #self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
-            response = requests.get(self.target, headers=self.request_headers)
-            return self.parse_response(response)
-        except Exception as e:
-            return None
-            #return Saas_Base.server_error(RESPONSE_SERVER_ERROR)
+    def make_request(self):
+        if self.method == 'GET':
+            return self.request_get()
+        elif self.method == 'POST':
+            return self.request_post()
+        else:
+            return {'error': f'unsupported method: {self.method}'}
 
-    def request_post(self):
-        """The POST http proxy API
-        """
-        try:
-            response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
-            return self.parse_response(response)
-        except Exception as e:
-            return self.bad_request(RESPONSE_SERVER_ERROR)
+    def is_binary_content_type(self, response):
+        return response.headers.get('Content-Type') in BINARY_CONTENT_TYPES
 
-    def parse_response(self, response):
+    def get_response_body(self, response):
+        if self.is_binary_content_type(response):
+            response_body = base64.b64encode(response.content).decode('utf-8')
+        else:
+            response_body = response.text
+        return response_body
+
+    def parse_response(self,response):
         response_headers = {}
+
         response_body = response.content
         for key, value in response.headers.items():  # the original value of result.headers is not serializable
             if key != 'Content-Encoding':
@@ -55,13 +54,34 @@ class Http_Proxy:
             response_body = response.text
         return self.ok(response_headers, response_body, is_base_64)
 
+    def request_get(self):
+        """The GET http proxy API
+        """
+        try:
+            #self.log_request(self.path, self.method, self.headers, self.domain_prefix, self.target, self.body)
+            response = requests.get(self.target, headers=self.request_headers)
+            return self.parse_response(response)
+        except Exception as e:
+            return None
+            #return Saas_Base.server_error(RESPONSE_SERVER_ERROR)
+
+    # bug: this is only supporting json payloads
+    def request_post(self):
+        """The POST http proxy API
+        """
+        try:
+            response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
+            return self.parse_response(response)
+        except Exception as e:
+            return self.bad_request(RESPONSE_SERVER_ERROR)
+
     @staticmethod
-    def bad_request(body):
+    def bad_request(body):                  # todo: move to helper class
         return { "statusCode": 400 ,
                  "body"     : f'{body}' }
 
     @staticmethod
-    def server_error(body):
+    def server_error(body):                 # todo: move to helper class
         return { "statusCode": 500 ,
                  "body"      : f'{body}' }
 
