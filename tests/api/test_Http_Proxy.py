@@ -1,8 +1,6 @@
 import json
 from unittest import TestCase
 
-from pbx_gs_python_utils.utils.Dev import Dev
-
 from gw_proxy.api.Http_Proxy import Http_Proxy
 
 
@@ -20,7 +18,6 @@ class test_Http_Proxy(TestCase):
 
     def test_make_request(self):
         http_proxy = Http_Proxy(target='https://postman-echo.com/get?foo1=bar1&foo2=bar2' )
-        Dev.pprint(http_proxy.make_request())
 
     # todo, move to integration tests
     def test_request_get__postman_echo(self):

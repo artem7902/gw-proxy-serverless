@@ -1,7 +1,5 @@
 from unittest import TestCase
 
-from pbx_gs_python_utils.utils.Dev import Dev
-
 from gw_proxy.api.Lambda_Event import Lambda_Event
 
 
@@ -43,5 +41,4 @@ class test_Lambda_Event(TestCase):
         params       = {'httpMethod' : 'GET' , 'path': 'get?foo1=bar1&foo2=bar2', 'domain_prefix': 'postman-echo.com'}
         lambda_event = Lambda_Event(params)
         result       = lambda_event.get_response()
-        Dev.pprint(result)
         print(lambda_event.http_proxy.target)
