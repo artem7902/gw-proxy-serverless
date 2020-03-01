@@ -7,7 +7,7 @@ from gw_proxy.api.Http_Proxy import Http_Proxy
 class test_Http_Proxy(TestCase):
 
     def setUp(self):
-        self.http_proxy = Http_Proxy(body=None, path=None,headers={},method=None,target=None)
+        self.http_proxy = Http_Proxy(body=None,headers={},method=None,target=None)
 
     def test_ctor(self):
         self.assertIsInstance(self.http_proxy, Http_Proxy)
@@ -20,11 +20,19 @@ class test_Http_Proxy(TestCase):
         http_proxy = Http_Proxy(target='https://postman-echo.com/get?foo1=bar1&foo2=bar2' )
 
     # todo, move to integration tests
+
+    def test_request_get__glasswall(self):
+        target = 'https://glasswallsolutions.com/asd'
+        http_proxy = Http_Proxy(target=target, method='GET')
+        body = http_proxy.request_get().get('body')
+        print(type(body))
+
+
     def test_request_get__postman_echo(self):
         target = 'https://postman-echo.com/get?foo1=bar1&foo2=bar2'
         http_proxy = Http_Proxy(target=target, method='GET')
         body = http_proxy.request_get().get('body')
-        self.assertEquals(body,'{"args":{"foo1":"bar1","foo2":"bar2"},"headers":{"x-forwarded-proto":"https","host":"postman-echo.com","accept-encoding":"identity","x-forwarded-port":"443"},"url":"https://postman-echo.com/get?foo1=bar1&foo2=bar2"}')
+        self.assertEqual(body,'{"args":{"foo1":"bar1","foo2":"bar2"},"headers":{"x-forwarded-proto":"https","host":"postman-echo.com","accept-encoding":"identity","x-forwarded-port":"443"},"url":"https://postman-echo.com/get?foo1=bar1&foo2=bar2"}')
 
     # todo, move to integration tests
     def test_request_post__postman_echo(self):

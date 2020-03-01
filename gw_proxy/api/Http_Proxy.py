@@ -8,14 +8,13 @@ from gw_proxy._to_sync.anish_agarwal.Proxy_Const import CONST_BINARY_TYPES, RESP
 
 class Http_Proxy:
 
-    def __init__(self, target, path='', method='GET', body='', headers={}):
+    def __init__(self, target, method='GET', body='', headers={}):
         self.body            = body
-        self.path            = path
         self.headers         = headers
         self.method          = method
         self.target          = target
 
-        self.request_headers = { 'accept'         : self.headers.get('headers'        ),
+        self.request_headers = { #'accept'         : self.headers.get('accept'        ),
                                  'User-Agent'     : self.headers.get('User-Agent'     ),
                                  'accept-encoding': self.headers.get('accept-encoding')}
 
@@ -46,12 +45,14 @@ class Http_Proxy:
                 response_headers[key] = str(value)
         content_type = response_headers.get('Content-Type')
 
-        if content_type in CONST_BINARY_TYPES:
-            is_base_64 = True
-            response_body = base64.b64encode(response_body).decode("utf-8")
-        else:
-            is_base_64 = False
-            response_body = response.text
+        #if content_type in CONST_BINARY_TYPES:
+        #    is_base_64 = True
+        #    response_body = base64.b64encode(response_body).decode("utf-8")
+        #else:
+        #    is_base_64 = False
+        #    response_body = response.content
+        is_base_64 = False
+        response_body = response.content
         return self.ok(response_headers, response_body, is_base_64)
 
     def request_get(self):
@@ -78,12 +79,12 @@ class Http_Proxy:
     @staticmethod
     def bad_request(body):                  # todo: move to helper class
         return { "statusCode": 400 ,
-                 "body"     : f'{body}' }
+                 "body"     : body }
 
     @staticmethod
     def server_error(body):                 # todo: move to helper class
         return { "statusCode": 500 ,
-                 "body"      : f'{body}' }
+                 "body"      : body }
 
     @staticmethod
     def ok(headers, body, is_base_64):

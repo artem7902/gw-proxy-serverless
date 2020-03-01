@@ -11,8 +11,8 @@ class test_Lambda_Event(TestCase):
 
     # todo: improve test
     def test_ctor(self):
-        self.assertEquals(self.lambda_event.lambda_data    , {'body': {}, 'path': '', 'method': '', 'domain_prefix': None, 'headers': {}})
-        self.assertEquals(self.lambda_event.http_proxy.body, {})
+        self.assertEqual(self.lambda_event.lambda_data    , {'body': {}, 'path': '', 'method': '', 'domain_prefix': None, 'headers': {}})
+        self.assertEqual(self.lambda_event.http_proxy.body, {})
 
     def test_domain_parser(self):
         domain_parser = self.lambda_event.domain_parser
