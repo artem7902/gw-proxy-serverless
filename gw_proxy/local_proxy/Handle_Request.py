@@ -54,12 +54,21 @@ class Handle_Request(BaseHTTPRequestHandler):
         response    = http_proxy.make_request()
         self.handle_response(response)
 
+    def do_OPTIONS(self):
+        target = f'{self.proxy_target}{self.path}'
+        http_proxy = Http_Proxy(target=target, method='OPTIONS', headers=self.headers)
+        response = http_proxy.make_request()
+        self.handle_response(response)
+        #asd.asd()
 
     def do_POST(self):
         """Respond to a POST request."""
         target = f'{self.proxy_target}{self.path}'
         content_len = int(self.headers.get('content-length', 0))
-        post_body   = self.rfile.read(content_len)
+        if content_len > 0:
+            post_body = self.rfile.read(content_len)
+        else:
+            post_body = ''
         http_proxy = Http_Proxy(target=target, method='POST', body=post_body, headers=self.headers)
         response = http_proxy.make_request()
         self.handle_response(response)

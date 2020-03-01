@@ -27,7 +27,7 @@ class test_Http_Proxy(TestCase):
         http_proxy = Http_Proxy(target=target, method='POST', body=data, headers=headers)
         body       = json.loads(http_proxy.request_post().get('body'))
         self.assertEqual(body.get('args'), {'foo1': 'bar1', 'foo2': 'bar2'})
-        self.assertEqual(body.get('data'), data)
+        self.assertEqual(body.get('data'), 'some=data')
 
     def test_server_error(self):
         self.assertEqual(Http_Proxy().server_error('el-body'),  {'statusCode': 500, 'headers': {}, 'body': 'el-body'})
