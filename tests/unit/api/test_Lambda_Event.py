@@ -11,7 +11,7 @@ class test_Lambda_Event(TestCase):
 
     # todo: improve test
     def test_ctor(self):
-        self.assertEqual(self.lambda_event.lambda_data    , {'body': {}, 'path': '', 'method': '', 'domain_prefix': None, 'headers': {}})
+        self.assertEqual(self.lambda_event.lambda_data    , {'body': {}, 'method': '', 'domain_prefix': None, 'headers': {}, 'path': ''})
         self.assertEqual(self.lambda_event.http_proxy.body, {})
 
     def test_domain_parser(self):
@@ -34,11 +34,3 @@ class test_Lambda_Event(TestCase):
         self.assertEqual(domain_parser('../aaa/'      , None    ), 'https://../aaa/'                                    ) # invalid domain
         self.assertEqual(domain_parser('a:b@cc'       , None    ), 'https://a:b@cc'                                     ) # domain contain pwd
         self.assertEqual(domain_parser('aaa'          , '/../aa'), 'https://aaa/../aa'                                  ) # path transversal
-
-    # todo: move to integration tests
-
-    def test_get_response__postman_echo(self):
-        params       = {'httpMethod' : 'GET' , 'path': 'get?foo1=bar1&foo2=bar2', 'domain_prefix': 'postman-echo.com'}
-        lambda_event = Lambda_Event(params)
-        result       = lambda_event.get_response()
-        print(lambda_event.http_proxy.target)

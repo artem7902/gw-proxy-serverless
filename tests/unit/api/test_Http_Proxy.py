@@ -32,7 +32,7 @@ class test_Http_Proxy(TestCase):
         target = 'https://postman-echo.com/get?foo1=bar1&foo2=bar2'
         http_proxy = Http_Proxy(target=target, method='GET')
         body = http_proxy.request_get().get('body')
-        self.assertEqual(body,'{"args":{"foo1":"bar1","foo2":"bar2"},"headers":{"x-forwarded-proto":"https","host":"postman-echo.com","accept-encoding":"identity","x-forwarded-port":"443"},"url":"https://postman-echo.com/get?foo1=bar1&foo2=bar2"}')
+        self.assertEqual(body, b'{"args":{"foo1":"bar1","foo2":"bar2"},"headers":{"x-forwarded-proto":"https","host":"postman-echo.com","accept":"*/*","accept-encoding":"identity","x-forwarded-port":"443"},"url":"https://postman-echo.com/get?foo1=bar1&foo2=bar2"}')
 
     # todo, move to integration tests
     def test_request_post__postman_echo(self):

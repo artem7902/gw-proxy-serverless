@@ -19,10 +19,8 @@ class Lambda_Event:
 
         self.target = self.domain_parser(event.get('domain_prefix'), self.lambda_data.get('path'))
         self.http_proxy = Http_Proxy(body          = self.lambda_data.get('body'         ),
-                                     path          = self.lambda_data.get('path'         ),
                                      headers       = self.lambda_data.get('headers'      ),
                                      method        = self.lambda_data.get('method'       ),
-                                     #domain_prefix = self.lambda_data.get('domain_prefix'),
                                      target        = self.target)
 
     def domain_parser(self, domain_prefix, path=''):
