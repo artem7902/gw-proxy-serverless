@@ -8,7 +8,7 @@ from gw_proxy._to_sync.anish_agarwal.Proxy_Const import CONST_BINARY_TYPES, RESP
 
 class Http_Proxy:
 
-    def __init__(self, target, method='GET', body='', headers={}):
+    def __init__(self, target=None, method='GET', body='', headers={}):
         self.body            = body
         self.headers         = headers
         self.method          = method
@@ -73,17 +73,21 @@ class Http_Proxy:
         try:
             response = requests.post(self.target, data=json.dumps(self.body), headers=self.headers)
             return self.parse_response(response)
-        except Exception as e:
-            return self.bad_request(RESPONSE_SERVER_ERROR)
+        except Exception as error:
+            return self.bad_request(error)
 
     @staticmethod
     def bad_request(body):                  # todo: move to helper class
+        if type(body) is not bytes:
+            body = str(body).encode()
         return { "statusCode": 400 ,
+                 "headers"  : {}   ,        # todo: also return headers
                  "body"     : body }
 
     @staticmethod
     def server_error(body):                 # todo: move to helper class
-        return { "statusCode": 500 ,
+        return { "statusCode": 500  ,
+                 "headers"   : {}   ,       # todo: also return headers
                  "body"      : body }
 
     @staticmethod

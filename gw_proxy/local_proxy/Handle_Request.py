@@ -17,16 +17,24 @@ class Handle_Request(BaseHTTPRequestHandler):
     def handle(self):                                   # override base method because it was hanging due to "self.close_connection = True"
         self.handle_one_request()
 
+    def handle_response(self, response):
+        body        = response.get('body'       )
+        headers     = response.get('headers'    )
+        status_code = response.get('statusCode' )
+
+        (self.send_status_code     (status_code)
+             .send_response_headers(headers    )
+             .send_data            (body      ))
+        return self
+
     def send_data(self, data):
         self.wfile.write(data)
         return self
 
-    def send_response_headers(self, headers):
+    def send_response_headers(self, headers={}):
         for key,value in headers.items():
             if key.lower() not in self.skip_response_headers:
                 self.send_header(key, value)
-            # else:
-            #     print(f'{self.path}: skipped header: {key} : {value}')
         self.end_headers()
         return self
 
@@ -44,10 +52,14 @@ class Handle_Request(BaseHTTPRequestHandler):
         target      = f'{self.proxy_target}{self.path}'
         http_proxy  = Http_Proxy(target=target, method='GET', headers=self.headers)
         response    = http_proxy.make_request()
-        body        = response.get('body'       )
-        headers     = response.get('headers'    )
-        status_code = response.get('statusCode' )
+        self.handle_response(response)
 
-        (self.send_status_code     (status_code)
-             .send_response_headers(headers    )
-             .send_data            (body      ))
+
+    def do_POST(self):
+        """Respond to a POST request."""
+        target = f'{self.proxy_target}{self.path}'
+        content_len = int(self.headers.get('content-length', 0))
+        post_body   = self.rfile.read(content_len)
+        http_proxy = Http_Proxy(target=target, method='POST', body=post_body, headers=self.headers)
+        response = http_proxy.make_request()
+        self.handle_response(response)
