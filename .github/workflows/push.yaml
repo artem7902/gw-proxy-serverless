@@ -9,6 +9,6 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: GitHub Action for pytest
-      uses: filetrust/gw-proxy-serverless@adding-github-actions
+      uses: filetrust/gw-proxy-serverless@master
       with:
         args: pytest tests
