@@ -3,8 +3,6 @@ import unittest
 # create REST API that creates a proxy for multiple sites
 from unittest import TestCase
 
-from pbx_gs_python_utils.utils.Http import GET
-
 from gw_proxy._to_sync.andrii_tykhonov.lambdas.gw.proxy.saas_vps import run
 
 
