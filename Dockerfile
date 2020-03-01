@@ -8,3 +8,6 @@ LABEL "com.github.actions.color"="black"
 RUN pip install --upgrade pip
 RUN pip install pytest==5.2.2 pytest-cov==2.8.1 pytest-mock==1.11.2
 RUN pip install requests
+
+# note: check best way to make sure we have the latest version
+RUN git submodule update --init --recursive
