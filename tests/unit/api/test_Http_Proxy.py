@@ -1,5 +1,6 @@
 import json
 from unittest import TestCase
+import requests
 
 from gw_proxy.api.Http_Proxy import Http_Proxy
 
