@@ -30,7 +30,7 @@ class test_Server(TestCase):
         result     = json.loads(raw_result)
         assert result.get('args') == {'a' : '42'}
         assert result.get('data') == '{"aa": "12"}'
-        assert result.get('url') == 'https://127.0.0.1/post?a=42'
+        assert result.get('url') == 'https://httpbin.org/post?a=42'
 
 
 
