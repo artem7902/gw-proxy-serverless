@@ -17,11 +17,30 @@ class Http_Proxy:
         #self.verify_ssl      = False            # for now disable this since it was causing probs on some sites (like gofile.io)
         #urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+    # todo: refactor to use solution like the one at Response_Handler
+    def apply_transformations(self, response_body, response_headers):
+        if response_headers.get('Content-Type','').lower() == 'text/html; charset=utf-8':  #todo: change headers to lower case
+
+            content = response_body.decode()
+
+            ###### transformation 1 : replace server urls
+            target_server = 'https://demo.pydio.com'
+            #target_server = 'https://glasswallsolutions.com'
+            local_server  = 'http://127.0.0.1:12345'
+
+            content = content.replace(target_server, local_server)
+            return content.encode()
+
+            #print(response_headers)
+        return response_body
+
     def make_request(self):
         if self.method == 'GET':
             return self.request_get()
         elif self.method == 'POST':
             return self.request_post()
+        elif self.method == 'PUT':
+            return self.request_put()
         elif self.method == 'OPTIONS':
             return self.request_options()
         else:
@@ -54,9 +73,9 @@ class Http_Proxy:
         #    is_base_64 = False
         #    response_body = response.content
         is_base_64 = False
-        response_body = response.content
-
-        return self.ok(response_headers, response_body, is_base_64)
+        response_body    = response.content
+        transformed_body = self.apply_transformations(response_body, response_headers)
+        return self.ok(response_headers, transformed_body, is_base_64)
 
     def request_headers(self):
         #print('****** request headers*****')
@@ -86,24 +105,28 @@ class Http_Proxy:
         except Exception as error:
             return self.bad_request(error)
 
-    # bug: this is only supporting json payloads
+    # bug: this is not working for multiple sites
     def request_post(self):
         """The POST http proxy API
         """
         try:
-
             #if self.headers.get('Content-Type') =='application/x-www-form-urlencoded' and type(self.body) is bytes:
             #    self.body = self.body.decode()
-
-            print()
-            print('****** POST DATA*****')
-            print(self.request_headers().get('content-length') , len(self.body))
-            print(self.body)
-            print('###### POST DATA ####')
             response = requests.post(self.target, data=self.body, headers=self.request_headers(), verify=self.verify_ssl)
             return self.parse_response(response)
         except Exception as error:
             return self.bad_request(error)
+
+    def request_put(self):
+        """The POST http proxy API
+        """
+        try:
+            response = requests.put(self.target, data=self.body, headers=self.request_headers(), verify=self.verify_ssl)
+            return self.parse_response(response)
+        except Exception as error:
+            return self.bad_request(error)
+
+
 
     @staticmethod
     def bad_request(body):                  # todo: move to helper class

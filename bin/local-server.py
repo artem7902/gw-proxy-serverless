@@ -19,6 +19,9 @@ print(f'***** starting proxy server for url: {target_server} on port {port}')
 Server(target=target_server, port=port).setup().start()
 
 
+# https://demo.pydio.com        # really good by doesn't load ok
+# https://demo1.nextcloud.com   # POST don't work
+
 
 # https://www.transfernow.net
 # https://www.projectsend.org
@@ -29,4 +32,3 @@ Server(target=target_server, port=port).setup().start()
 # https://www.justbeamit.com/  (very interresting concept)
 # https://www.sendspace.com/
 
-# https://demo1.nextcloud.com
