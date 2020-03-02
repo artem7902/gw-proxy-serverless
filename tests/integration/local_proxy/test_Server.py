@@ -62,16 +62,3 @@ class test_Server(TestCase):
     #         file.write(result)
     #     print(len(result))
     #     server.stop()
-
-
-    def test_docker_own_cloud__POST(self):
-        target = 'http://localhost:8080'
-        post_data = 'redirect_url=%252Fapps%252Ffiles%252F%253Fdir%253D%252F%2526fileid%253D3&user=aaaa&password=bbbb&timezone-offset=0&timezone=Europe%2FLondon&requesttoken=JyFNEAkcJSAicnktfQsyP0E5E1oDAA0LegNCeWElaRY%3D%3AJYbeLZUqnE7uNaWsvlE%2BlolO7i5H0J8yUsiRcAnt9rA%3D'
-        server = Server(target=target).start_async()
-        path_file = 'login'
-        result = POST(f'{server.local_url()}{path_file}/login', post_data)
-        #print(result)
-        #assert "<h1>Method Not Allowed</h1>" in result
-        server.stop()
-
-
