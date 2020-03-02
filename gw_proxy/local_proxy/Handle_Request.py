@@ -72,3 +72,15 @@ class Handle_Request(BaseHTTPRequestHandler):
         http_proxy = Http_Proxy(target=target, method='POST', body=post_body, headers=self.headers)
         response = http_proxy.make_request()
         self.handle_response(response)
+
+    def do_PUT(self):                                       # todo: refactor these methods (do_GET, do_POST, do_PUT) since most have the same code
+        """Respond to a PUT request."""
+        target = f'{self.proxy_target}{self.path}'
+        content_len = int(self.headers.get('content-length', 0))
+        if content_len > 0:
+            post_body = self.rfile.read(content_len)
+        else:
+            post_body = ''
+        http_proxy = Http_Proxy(target=target, method='PUT', body=post_body, headers=self.headers)
+        response = http_proxy.make_request()
+        self.handle_response(response)

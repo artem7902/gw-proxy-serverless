@@ -14,9 +14,9 @@ class Server():
         self.target   = target
         self.with_ssl = False
         if self.with_ssl:
-            self.scheme   = 'http'
+            self.scheme   = 'https'
         else:
-            self.scheme = 'https'
+            self.scheme = 'http'
         self.httpd    = None
 
     # openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
@@ -46,6 +46,9 @@ class Server():
     # helper methods
     def local_url(self, path=''):
         return f'{self.scheme}://{self.host}:{self.port}/{path}'
+
+    def local_get(self, path=''):
+        return GET(self.local_url(path))
 
     def target_get(self, path=''):
         url = f'{self.target}/{path}'

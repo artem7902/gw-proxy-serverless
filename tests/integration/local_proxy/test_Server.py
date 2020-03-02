@@ -24,25 +24,30 @@ class test_Server(TestCase):
             result = json.loads(POST(f'{server.local_url()}/post?query=abc','aaa=123'))
             assert result.get('args') == {'query': 'abc'}
             assert result.get('form') == {'aaa': '123'}
-            print(result)
-            #assert "<h1>Method Not Allowed</h1>" in POST(server.local_url())
+            #assert "<h1>Method Not Allowed</h1>" in POST(server.url())
 
 
     def test_glasswall_solutions_com__GET(self):
         with Temp_Server('https://glasswallsolutions.com') as server:
+            print(GET(server.local_url()))
             assert "<title>Unparalleled Protection from Advanced Persistent Threats (APT)</title>" in GET(server.local_url())
 
     def test_project_send(self):
         server = Server(target='https://www.projectsend.org').start_async()
         result = GET(server.local_url())
-        assert '<title>Access denied | www.projectsend.org used Cloudflare to restrict access</title>' in result
+        print(result)
+        #assert '<title>Access denied | www.projectsend.org used Cloudflare to restrict access</title>' in result
         server.stop()
 
-    def test_(self):
+    def test_pydio_com(self):
         with Temp_Server('https://demo.pydio.com') as server:
-            print(server.target)
-            print(server.local_url())
-            print(server.target_get())
+            #print(server.target)
+            #print(server.local_url())
+            result = server.local_get('/plug/gui.ajax/res/build/pydio.min.js')
+            #result = server.target_get()
+            #print(server.target in result)
+
+            print(len(result))
 
 
     # def test_gofile_io__file(self):
