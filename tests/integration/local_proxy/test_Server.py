@@ -10,7 +10,7 @@ class test_Server(TestCase):
 
     def test_httpbin_org__GET(self):
         with Temp_Server() as server:
-            assert "<title>httpbin.org</title>" in GET(server.url())
+            assert "<title>httpbin.org</title>" in GET(server.local_url())
 
     def test_httpbin_org__OPTIONS(self):
         server = Server().start_async()
@@ -21,16 +21,16 @@ class test_Server(TestCase):
 
     def test_httpbin_org__POST(self):
         with Temp_Server('https://httpbin.org') as server:
-            result = json.loads(POST(f'{server.url()}/post?query=abc','aaa=123'))
+            result = json.loads(POST(f'{server.local_url()}/post?query=abc','aaa=123'))
             assert result.get('args') == {'query': 'abc'}
             assert result.get('form') == {'aaa': '123'}
             print(result)
-            #assert "<h1>Method Not Allowed</h1>" in POST(server.url())
+            #assert "<h1>Method Not Allowed</h1>" in POST(server.local_url())
 
 
     def test_glasswall_solutions_com__GET(self):
         with Temp_Server('https://glasswallsolutions.com') as server:
-            assert "<title>Unparalleled Protection from Advanced Persistent Threats (APT)</title>" in GET(server.url())
+            assert "<title>Unparalleled Protection from Advanced Persistent Threats (APT)</title>" in GET(server.local_url())
 
     def test_project_send(self):
         server = Server(target='https://www.projectsend.org').start_async()
