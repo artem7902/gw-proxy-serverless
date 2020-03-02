@@ -2,9 +2,7 @@ import base64
 import json
 
 import requests
-
-from gw_proxy._to_sync.andrii_tykhonov.api.proxy import BINARY_CONTENT_TYPES
-from gw_proxy._to_sync.anish_agarwal.Proxy_Const import CONST_BINARY_TYPES, RESPONSE_SERVER_ERROR
+import urllib3
 
 class Http_Proxy:
 
@@ -13,10 +11,22 @@ class Http_Proxy:
         self.headers         = headers
         self.method          = method
         self.target          = target
+        self.verify_ssl      = False            # for now disable this since it was causing probs on some sites (like gofile.io)
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         self.request_headers = { #'accept'         : self.headers.get('accept'        ),
                                  'User-Agent'     : self.headers.get('User-Agent'     ),
-                                 'accept-encoding': self.headers.get('accept-encoding')}
+                                 'Cookie'         : self.headers.get('Cookie'),
+                                 #'accept-encoding': self.headers.get('accept-encoding')
+        }
+        self.request_headers = {}
+        skip_headers = ['host', 'accept-encoding']
+        for key,value in self.headers.items():
+            if key.lower() not in skip_headers:
+                self.request_headers[key]=value
+        #print(key,value)
+        #self.request_headers = self.headers
+        #print(self.request_headers)
 
     def make_request(self):
         if self.method == 'GET':
@@ -28,15 +38,15 @@ class Http_Proxy:
         else:
             return {'error': f'unsupported method: {self.method}'}
 
-    def is_binary_content_type(self, response):
-        return response.headers.get('Content-Type') in BINARY_CONTENT_TYPES
+    # def is_binary_content_type(self, response):
+    #     return response.headers.get('Content-Type') in BINARY_CONTENT_TYPES
 
-    def get_response_body(self, response):
-        if self.is_binary_content_type(response):
-            response_body = base64.b64encode(response.content).decode('utf-8')
-        else:
-            response_body = response.text
-        return response_body
+    # def get_response_body(self, response):
+    #     if self.is_binary_content_type(response):
+    #         response_body = base64.b64encode(response.content).decode('utf-8')
+    #     else:
+    #         response_body = response.text
+    #     return response_body
 
     def parse_response(self,response):
         response_headers = {}
@@ -61,7 +71,7 @@ class Http_Proxy:
         """The GET http proxy API
         """
         try:
-            response = requests.get(self.target, headers=self.request_headers)
+            response = requests.get(self.target, headers=self.request_headers, verify=self.verify_ssl)
             return self.parse_response(response)
         except Exception as error:
             return self.bad_request(error)
@@ -71,7 +81,7 @@ class Http_Proxy:
         """The GET http proxy API
         """
         try:
-            response = requests.options(self.target, headers=self.request_headers)
+            response = requests.options(self.target, headers=self.request_headers, verify=self.verify_ssl)
             return self.parse_response(response)
         except Exception as error:
             return self.bad_request(error)
@@ -81,7 +91,7 @@ class Http_Proxy:
         """The POST http proxy API
         """
         try:
-            response = requests.post(self.target, data=self.body, headers=self.headers)
+            response = requests.post(self.target, data=self.body, headers=self.headers, verify=self.verify_ssl)
             return self.parse_response(response)
         except Exception as error:
             return self.bad_request(error)

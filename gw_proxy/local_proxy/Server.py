@@ -1,3 +1,4 @@
+import ssl
 import threading
 from http.server import HTTPServer
 
@@ -13,13 +14,14 @@ class Server():
         self.scheme = 'http'
         self.httpd  = None
 
-
+    # openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
     def setup(self):
         if self.port   is None: self.port   = random_port()
         if self.host   is None: self.host   = '127.0.0.1'
         if self.target is None: self.target = 'https://httpbin.org'
         Handle_Request.proxy_target = self.target
         self.httpd = HTTPServer((self.host, self.port), Handle_Request)
+        #self.httpd.socket = ssl.wrap_socket(self.httpd.socket, certfile='./server.pem', server_side=True)
         return self
 
     def start(self):
