@@ -36,6 +36,11 @@ use corresponding channel to ask questions and share work
 work as a team to collaborate
 at this stage it is ok for multiple resources to be allocated to the same issue, just share status and collaborate
 
+### How to start working in GITHub
+Please fork the master branch to your github
+work and push to your repo, new branch and create PR against filetrust/gw-proxy-serverless
+Put GITHub Issue reference number in PR
+
 
 ### GITHub Boards Descriptions(Backlog, Todo, In Progress, Done)
 
