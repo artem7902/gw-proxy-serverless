@@ -56,4 +56,9 @@ Put GITHub Issue reference number in PR
 
 - in the To Review status we have the issues that need review from a member of the Glasswall team (important: only members of the Glasswall team should move issues from the To Review status to the Done status)
 
+QA
+If I need to develop complete dashboard with pages and functionality, so I need to create issues for each page?
+
+for now everybody should be just working on one page (ok if more that one Upwork resource is working on the same page)
+yes, we will need one Pull Request per page
 
