@@ -23,10 +23,10 @@ See the example below:
 - Review the issues in "To Do" Column
 - Assign one of them to you
 - Move it "In Progress"
--Update in corresponding channel, which issue you have taken
--Start working on it
--Share early and often the status(work if possible in small chunks) in the channel and also update the GITHub issue
-- When issue is completed, update/attach to the issue  the files/instructions/images/wireframes
+- in corresponding channel, which issue you have taken
+- start working on it
+- share early and often the status(work if possible in small chunks) in the channel and also update the GITHub issue
+- when issue is completed, update/attach to the issue  the files/instructions/images/wireframes
 - All submissions to GIT repo to be done with Pull Request, put GITHub issue number as reference.
 
 
