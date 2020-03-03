@@ -68,7 +68,7 @@ class Handle_Request(BaseHTTPRequestHandler):
         if content_len > 0:
             post_body = self.rfile.read(content_len)
         else:
-            post_body = ''
+            post_body = b''
         http_proxy = Http_Proxy(target=target, method='POST', body=post_body, headers=self.headers)
         response = http_proxy.make_request()
         self.handle_response(response)
@@ -78,9 +78,9 @@ class Handle_Request(BaseHTTPRequestHandler):
         target = f'{self.proxy_target}{self.path}'
         content_len = int(self.headers.get('content-length', 0))
         if content_len > 0:
-            post_body = self.rfile.read(content_len)
+            put_body = self.rfile.read(content_len)
         else:
-            post_body = ''
+            put_body = b''
         http_proxy = Http_Proxy(target=target, method='PUT', body=post_body, headers=self.headers)
         response = http_proxy.make_request()
         self.handle_response(response)
