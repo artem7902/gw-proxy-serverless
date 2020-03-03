@@ -1,6 +1,12 @@
+import os
 import sys
-sys.path.append('.')
-sys.path.append('./modules/OSBOT-Utils')
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODULES_DIR = os.path.join(BASE_DIR, 'modules')
+
+sys.path.append(BASE_DIR)
+for d in os.listdir(MODULES_DIR):
+    sys.path.append(os.path.join(MODULES_DIR, d))
 
 from gw_proxy.local_proxy.Server import Server
 
