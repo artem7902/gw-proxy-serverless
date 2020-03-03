@@ -1,0 +1,21 @@
+.key-success {
+  border: 2px solid #449580;
+  color: #449580;
+  min-width: 320px;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 30px;
+  border-radius: 5px;
+
+  &-header {
+    text-align: center;
+    line-height: 42px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid #449580;
+  }
+
+  &-content {
+    height: 100px;
+  }
+}
