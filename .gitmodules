@@ -4,3 +4,6 @@
 [submodule "modules/OSBot-AWS"]
 	path = modules/OSBot-AWS
     url = https://github.com/owasp-sbot/OSBot-AWS.git
+[submodule "modules/OSBot-python-utils"]
+	path = modules/OSBot-python-utils
+	url = https://github.com/owasp-sbot/OSBot-python-utils.git
