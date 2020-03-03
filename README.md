@@ -28,6 +28,7 @@ See the example below:
 - share early and often the status(work if possible in small chunks) in the channel and also update the GITHub issue
 - when issue is completed, update/attach to the issue  the files/instructions/images/wireframes
 - All submissions to GIT repo to be done with Pull Request, put GITHub issue number as reference.
+- For having attention when PR needs review, use label "with-pr"
 
 
 Notes:
@@ -35,6 +36,8 @@ all submissions to be done via Pull Requests
 use corresponding channel to ask questions and share work
 work as a team to collaborate
 at this stage it is ok for multiple resources to be allocated to the same issue, just share status and collaborate
+to help with reviewing the PRs please add the screenshots and comments of what supposed to be reviewed to the issue
+
 
 ### How to start working in GITHub
 Please fork the master branch to your github
