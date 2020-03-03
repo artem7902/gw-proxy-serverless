@@ -1,9 +1,14 @@
 import json
 import sys
-sys.path.append('.')
 
+from websocket import create_connection
+
+sys.path.append('.')
+sys.path.append('./modules/OSBot-Utils')
+
+from osbot_utils.utils.Files import Files
 from flask import Flask,request,redirect,Response
-from flask_socketio import SocketIO, emit
+#from flask_socketio import SocketIO, emit
 import requests
 
 from gw_proxy.api.Http_Proxy import Http_Proxy
@@ -24,32 +29,70 @@ def ping():
     return 'pong'
 
 @sockets.route('/api/ws')
+def echo_socket(ws):                # this all works ok
+    print('\n\n********* /api/ws')
+
+    ff_ws = create_connection("wss://send.firefox.com/api/ws")
+
+    file_metadata = ws.receive()
+    print("sending file_metadata")
+    ff_ws.send(file_metadata)
+    target_details = ff_ws.recv()
+    print(f'target_details: {target_details}')
+    ws.send(target_details)
+    bytes_1 = ws.receive()
+    bytes_2 = ws.receive()
+    bytes_3 = ws.receive()
+    #print(f"sending bytes_1 : {len(bytes_1)}")
+    ff_ws.send(bytes_1)
+    #print(f"sending bytes_2 : {len(bytes_2)}")
+    ff_ws.send(bytes_2)
+    #print(f"sending bytes_3 : {len(bytes_3)}")
+    ff_ws.send(bytes_3)
+    result = ff_ws.recv()
+    print(f'result: {result}')
+    ws.send(result)
+    print('<<<< all done >>>>>\n\n')
+
+
+@sockets.route('/api/ws__ok')
 def echo_socket(ws):
     print('********* in Socket')
 
     message = ws.receive()
     if type(message) is str:
         print(f"received: {message}")
-        message_data = json.loads(message)
+        file_metadata = json.loads(message)
         #print(f"fileMetadata: {message_data.get('fileMetadata')}")
         print('>>>>> sending ok <<<<<<<<<<')
         print(ws.send)
-#        ws.send("{'ok-1': True}")
-#        ws.send("{ok_1: true }")
-#        ws.send("{'ok-2': True}")
-        # print('>>>>> sending url')
         ws.send('{"url":"https://send.firefox.com/download/8de4acc1dd5bee5a/","ownerToken":"88b28511eb6d5fc2d23f","id":"8de4acc1dd5bee5a"}')
         #         , json=True, namespace='/api/ws')
         print('>>>>> all done')
 
+        print(Files.save_string_as_file('/tmp/_firefox_send__file_metadata', json.dumps(file_metadata)))
+        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_1', ws.receive()))
+        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_2', ws.receive()))
+        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_3', ws.receive()))
 
-        print(type(ws.receive()),ws.closed)
-        print('>>>>> 1')
-        print(type(ws.receive()), ws.closed)
-        print('>>>>> 2')
-        print(type(ws.receive()), ws.closed)
-        print('>>>>> 3')
-        ws.send('{"ok": true}')
+        # while True:
+        #     bytes = ws.receive()
+        #     print(f'received {len(bytes)}')
+        #     print(bytes)
+        #     if len(bytes) == 1:
+        #         break
+
+            #print(bytes)
+            #bytes_2 = ws.receive()
+            #bytes_3 = ws.receive()
+            ##print(f'received {len(bytes_1)} - {len(bytes_2)} - {len(bytes_3)}')
+        # #print(type(ws.receive()),ws.closed)
+        # print('>>>>> 1')
+        # print(type(ws.receive()), ws.closed)
+        # print('>>>>> 2')
+        # print(type(ws.receive()), ws.closed)
+        # print('>>>>> 3')
+        ws.send('{"ok": true}', ws.closed)
         print('>>>>> 4')
 
 
