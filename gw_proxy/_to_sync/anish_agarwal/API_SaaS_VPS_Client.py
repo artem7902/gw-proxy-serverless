@@ -19,7 +19,7 @@ class API_SaaS_VPS_Client(Saas_Base):
         self.method          = event.get('httpMethod'    , ''                         )
         self.domain_prefix   = event.get('requestContext', {}).get('domainPrefix'     )
         self.target          = self.domain_parser ( self.domain_prefix, self.path      )
-        self.request_headers = { 'accept'         : self.headers.get('headers'        ),
+        self.request_headers = { 'accept'         : self.headers.get('accept'        ),
                                  'User-Agent'     : self.headers.get('User-Agent'     ),
                                  'accept-encoding': self.headers.get('accept-encoding')}
 
