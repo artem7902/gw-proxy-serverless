@@ -23,6 +23,18 @@ sockets = Sockets(app)
 SITE_NAME = 'https://glasswallsolutions.com/'
 SITE_NAME = "https://gofile.io/"
 
+@app.route('/download')
+def download():
+    headers = {'content-type': 'application/json; charset=utf-8', 'status': 200}
+    server_name = request.args.get('server')
+    params      = request.args.get('params')
+    file_id     = request.args.get('c')
+#download?server=srv-file4&params=.gofile.io/getUpload&c=KLURWK
+    url = f'https://{server_name}{params}?c={file_id}'
+    data = GET(url)
+    print(data)
+    return Response(data, 201, headers)
+
 @app.route('/getServer')
 def getServer():
     key = request.args.get('c')
@@ -64,22 +76,14 @@ def upload():
         server_name = GET_Json('https://apiv2.gofile.io/getServer').get('data').get('server')
         upload_url = f'https://{server_name}.gofile.io/upload'
         multipart_form_data = None
-        for file_name, file_path in files_to_save:
+        for file_name, content_type, file_path in files_to_save:
             print(f">>>> Uploading file to gofile server: {file_name}")
             if multipart_form_data is None:
-                multipart_form_data = (('filesUploaded', (file_name, open(file_path, 'rb'))),)
+                multipart_form_data = (('filesUploaded', (file_name, open(file_path, 'rb') ,content_type)),)
             else:
                 multipart_form_data = (*multipart_form_data, ('filesUploaded', (file_name, open(file_path, 'rb'))))
-        # print()
-        # print(multipart_form_data)
-        # print()
-        # multipart_form_data = (
-        #     ('filesUploaded', ('bbbbb.txt', open('/tmp/uploaded_files/bbbbb.txt', 'rb'))),
-        #     #('filesUploaded', ('aa-some-text.txt', open('/tmp/uploaded_files/aa-some-text.txt', 'rb'))),
-        #     # ('email',  (None, 'dinis.cruz@owasp.org'))
-        # )
 
-        print(multipart_form_data)
+        #print(multipart_form_data)
         urllib3.disable_warnings()
         verify_SSL = False          #todo: figure out why this isn't working (note: currenly running server as root due to need to open server in port 443)
         response = requests.post(upload_url, files=multipart_form_data, verify=verify_SSL)
@@ -87,50 +91,17 @@ def upload():
         print(f">>>> {result}")
         return result
 
-
-
-        server_name = GET_Json('https://apiv2.gofile.io/getServer').get('data').get('server')
-        upload_url = f'https://{server_name}.gofile.io/upload'
-
-        multipart_form_data = ()
-            #(
-        #    ('filesUploaded', ('bbbbb.txt', open('/tmp/uploaded_files/bbbbb.txt', 'rb'))),
-        #    ('filesUploaded', ('aa-some-text.txt', open('/tmp/uploaded_files/aa-some-text.txt', 'rb'))),
-            # ('email',  (None, 'dinis.cruz@owasp.org'))
-        #)
-        for file_name, file_path in files_to_save:
-            multipart_form_data = (*multipart_form_data, (file_name, open(file_path, 'rb')))
-            #multipart_form_data = (*multipart_form_data, (file_name, open(file_path, 'rb')))
-            # multipart_form_data.append((file_name, open(file_path, 'rb')))
-            # multipart_form_data.append((file_name, open(file_path, 'rb')))
-
-        print(upload_url)
-        print(multipart_form_data)
-
-        response = requests.post(upload_url, files=multipart_form_data)
-        print(response.content)
-        
-        
-
     headers = {'content-type': 'application/json; charset=utf-8', 'status': 200}
     try:
-        # print('>>>>>> in UPLOAD <<<<<<')
+
+        # print('------------')
         # print(request.get_data())
-        # print('>>>>>> request.files <<<<<<')
-        # print(request.files['filesUploaded'])
-        # print('>>>>>> len(request.files) <<<<<<')
-        # print(request.files.getlist('filesUploaded'))
-        #print(request.files.items())
-        #for key,value in request.headers.items():
-        #    print(key,value)
-        #print('---------------')
-        #print(request.get_data())
+        # print('------------')
         files_to_save = []
-        #target_Folder = Files.folder_create('/tmp/uploaded_files')
         for file in request.files.getlist('filesUploaded'):
             temp_file = Files.temp_file()
             file.save(temp_file)
-            files_to_save.append((file.filename, temp_file))
+            files_to_save.append((file.filename, file.content_type, temp_file))
 
         data = save_to_gofile(files_to_save)
 
