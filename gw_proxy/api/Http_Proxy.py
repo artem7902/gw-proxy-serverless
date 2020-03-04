@@ -22,7 +22,7 @@ class Http_Proxy:
             target = 'gofile.io'
             content = response_body.decode()            
             ###### transformation 1 : replace server urls
-            local_server     = f'localhost:{port}'
+            local_server     = f'glasswall.gofile.io:{port}'
             local_url        = f'https://{local_server}'
             #local_websocket  = f'ws://{local_server}'
 
@@ -33,8 +33,16 @@ class Http_Proxy:
             content = content.replace(api_server    , local_server)
 
             content = content.replace(f'https://{target}', f'https://{target}:{port}/')
-            content = content.replace('apiv2'            , f'localhost:{port}/')
+            content = content.replace('apiv2'            , f'glasswall.gofile.io:{port}/')
 
+            html_before   = '<a href="index.html" class="brand-link">'
+            html_after    = '<a href="index.html" class="brand-link"><img src="https://user-images.githubusercontent.com/656739/75874578-eb159c00-5e09-11ea-8d47-98a7918b37e9.png" width="200">'
+            html_remove_1 = '<img src="dist/img/logo-small.png" alt="Gofile Logo" class="brand-image"'
+            html_remove_2 = '<span class="brand-text font-weight-light">Gofile</span>'
+
+            content = content.replace(html_before,html_after)
+            content = content.replace(html_remove_1, '<span')
+            content = content.replace(html_remove_2, '')
 
             # target_server = 'https://glasswallsolutions.com'
             # content = content.replace(target_server, local_server)

@@ -1,0 +1,1 @@
+sudo python3 gw_proxy/local_server/Proxy_PA.py

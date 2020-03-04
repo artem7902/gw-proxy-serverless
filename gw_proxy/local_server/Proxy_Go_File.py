@@ -43,7 +43,7 @@ def getServer():
     #print(target_url)
     result     = GET(target_url)
     server     = json.loads(result).get('data').get('server')
-    fixed_data= f'{{"status": "ok", "data": {{"server": "localhost/download?server={server}&params=" }} }}'
+    fixed_data= f'{{"status": "ok", "data": {{"server": "glasswall.gofile.io/download?server={server}&params=" }} }}'
     headers = {'content-type': 'application/json; charset=utf-8', 'status': 200}
     return Response(fixed_data, 201, headers)
 
@@ -66,7 +66,7 @@ def getUploadsList():
 
 @app.route('/.gofile.io/getServer')
 def get_server():
-    data = '{"status":"ok","data":{"server":"localhost:443/"}}'
+    data = '{"status":"ok","data":{"server":"glasswall.gofile.io:443/"}}'
     headers = {'content-type':'application/json; charset=utf-8' , 'status': 200}
     return Response(data, 200, headers)
 
@@ -185,7 +185,8 @@ def proxy(path=''):
 
 if __name__ == '__main__':
     #app.run(debug = True,port=12345,ssl_context=('cert.pem', 'key.pem'))
-    app.run(debug=True, port=443, ssl_context=('localhost.crt', 'localhost.key'))
+    #app.run(debug=True, port=443, ssl_context=('localhost.crt', 'localhost.key'))
+    app.run(debug=True, port=443, ssl_context=('gw-gofile.crt', 'gw-gofile.key'))
     # from gevent import pywsgi
     # from geventwebsocket.handler import WebSocketHandler
     #
@@ -200,3 +201,9 @@ if __name__ == '__main__':
     #   -newkey rsa:2048 -nodes -sha256 \
     #   -subj '/CN=localhost' -extensions EXT -config <( \
     #    printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+# openssl req -x509 -out gw-gofile.crt -keyout gw-gofile.key \
+#   -newkey rsa:2048 -nodes -sha256 \
+#   -subj '/CN=glasswall.gofile.io' -extensions EXT -config <( \
+#    printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:glasswall.gofile.io\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
