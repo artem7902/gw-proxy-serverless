@@ -1,10 +1,11 @@
 import json
 import sys
 
+import urllib3
 
 sys.path.append('.')
 sys.path.append('./modules/OSBot-Utils')
-from osbot_utils.utils.Http import GET
+from osbot_utils.utils.Http import GET, GET_Json
 from osbot_utils.utils.Files import Files
 from flask import Flask,request,redirect,Response
 #from flask_socketio import SocketIO, emit
@@ -58,6 +59,59 @@ def get_server():
 
 @app.route('/.gofile.io/upload', methods=['POST'])
 def upload():
+
+    def save_to_gofile(files_to_save):
+        server_name = GET_Json('https://apiv2.gofile.io/getServer').get('data').get('server')
+        upload_url = f'https://{server_name}.gofile.io/upload'
+        multipart_form_data = None
+        for file_name, file_path in files_to_save:
+            print(f">>>> Uploading file to gofile server: {file_name}")
+            if multipart_form_data is None:
+                multipart_form_data = (('filesUploaded', (file_name, open(file_path, 'rb'))),)
+            else:
+                multipart_form_data = (*multipart_form_data, ('filesUploaded', (file_name, open(file_path, 'rb'))))
+        # print()
+        # print(multipart_form_data)
+        # print()
+        # multipart_form_data = (
+        #     ('filesUploaded', ('bbbbb.txt', open('/tmp/uploaded_files/bbbbb.txt', 'rb'))),
+        #     #('filesUploaded', ('aa-some-text.txt', open('/tmp/uploaded_files/aa-some-text.txt', 'rb'))),
+        #     # ('email',  (None, 'dinis.cruz@owasp.org'))
+        # )
+
+        print(multipart_form_data)
+        urllib3.disable_warnings()
+        verify_SSL = False          #todo: figure out why this isn't working (note: currenly running server as root due to need to open server in port 443)
+        response = requests.post(upload_url, files=multipart_form_data, verify=verify_SSL)
+        result   = response.content
+        print(f">>>> {result}")
+        return result
+
+
+
+        server_name = GET_Json('https://apiv2.gofile.io/getServer').get('data').get('server')
+        upload_url = f'https://{server_name}.gofile.io/upload'
+
+        multipart_form_data = ()
+            #(
+        #    ('filesUploaded', ('bbbbb.txt', open('/tmp/uploaded_files/bbbbb.txt', 'rb'))),
+        #    ('filesUploaded', ('aa-some-text.txt', open('/tmp/uploaded_files/aa-some-text.txt', 'rb'))),
+            # ('email',  (None, 'dinis.cruz@owasp.org'))
+        #)
+        for file_name, file_path in files_to_save:
+            multipart_form_data = (*multipart_form_data, (file_name, open(file_path, 'rb')))
+            #multipart_form_data = (*multipart_form_data, (file_name, open(file_path, 'rb')))
+            # multipart_form_data.append((file_name, open(file_path, 'rb')))
+            # multipart_form_data.append((file_name, open(file_path, 'rb')))
+
+        print(upload_url)
+        print(multipart_form_data)
+
+        response = requests.post(upload_url, files=multipart_form_data)
+        print(response.content)
+        
+        
+
     headers = {'content-type': 'application/json; charset=utf-8', 'status': 200}
     try:
         # print('>>>>>> in UPLOAD <<<<<<')
@@ -67,20 +121,19 @@ def upload():
         # print('>>>>>> len(request.files) <<<<<<')
         # print(request.files.getlist('filesUploaded'))
         #print(request.files.items())
-        for key,value in request.headers.items():
-            print(key,value)
-        print('---------------')
-        print(request.get_data())
+        #for key,value in request.headers.items():
+        #    print(key,value)
+        #print('---------------')
+        #print(request.get_data())
+        files_to_save = []
+        #target_Folder = Files.folder_create('/tmp/uploaded_files')
+        for file in request.files.getlist('filesUploaded'):
+            temp_file = Files.temp_file()
+            file.save(temp_file)
+            files_to_save.append((file.filename, temp_file))
 
-        # target_Folder = Files.folder_create('/tmp/uploaded_files')
-        # for file in request.files.getlist('filesUploaded'):
-        #     print('--------------')
-        #     print(file.filename)
-        #     temp_file = f'{target_Folder}/{file.filename}'
-        #     print(temp_file)
-        #     print(file.save(temp_file))
-        # #print(request.files[0])
-        data = '{"status":"ok","data":{"code":"nOx5QC","removalCode":"....."}}'
+        data = save_to_gofile(files_to_save)
+
         return Response(data, 200, headers)
     except Exception as error:
         data = f'{{"status":"error", "data": "{error}"}}'
