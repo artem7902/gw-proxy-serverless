@@ -1,10 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import ReactSpeedometer from 'react-d3-speedometer';
-import LineChart from './components/lineChart';
+import BusinessHealth from './components/businessHealth';
 import BarChart from './components/barChart';
 import KeySuccess from './components/keySuccess';
+import MonthTable from './components/monthTable';
+import YearTable from './components/yearTable';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -15,37 +16,43 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <Row className="mt-5">
-          <div className="title">SALES, REVENUE, SOW + PIPELINE</div>
-          <div className="ml-auto" style={{ height: 200 }}>
-            <ReactSpeedometer value={500} />
-          </div>
+        <Row className="my-5">
+          <div className="title">OVERVIEW</div>
         </Row>
-        <Card fluid>
-          <Card.Content header="SALES" />
-          <Card.Content>
-            <LineChart />
-          </Card.Content>
-        </Card>
-
-        <Card fluid>
-          <Card.Content header="REVENUE" />
-          <Card.Content>
-            <LineChart revenue={true} />
-          </Card.Content>
-        </Card>
-
         <Row>
+          <Col md={12}>
+            <Card fluid>
+              <Card.Content header="Progress" />
+              <Card.Content>
+                <Row>
+                  <Col md={6}>
+                    <MonthTable />
+                  </Col>
+                  <Col md={6}>
+                    <YearTable />
+                  </Col>
+                </Row>
+              </Card.Content>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="mt-4">
           <Col md={6}>
             <Card fluid>
-              <Card.Content header="PIPELINE + SOW" />
+              <Card.Content header="Revenue, SOW + PIPELINE vs FY TqT" />
               <Card.Content>
                 <BarChart />
               </Card.Content>
             </Card>
-          </Col>
-          <Col md={6} className="d-flex justify-content-center">
             <KeySuccess />
+          </Col>
+          <Col md={6}>
+            <Card fluid>
+              <Card.Content header="Business Health" />
+              <Card.Content>
+                <BusinessHealth />
+              </Card.Content>
+            </Card>
           </Col>
         </Row>
       </Container>

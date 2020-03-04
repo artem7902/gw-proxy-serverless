@@ -12,82 +12,23 @@ import {
   Text,
   ReferenceLine,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts';
+import { Label } from 'semantic-ui-react';
 
 const data = [
   {
-    name: 'J',
-    ACTVAL: 1300,
-  },
-  {
-    name: 'F',
-    ACTVAL: 2800,
-  },
-  {
-    name: 'M',
-    BUDGET: 1600,
-    FY19: 1800,
-  },
-  {
-    name: 'A',
-    BUDGET: 1700,
-    FY19: 1800,
-  },
-  {
-    name: 'M',
-    BUDGET: 1790,
-    FY19: 1700,
-  },
-  {
-    name: 'J',
-    BUDGET: 1800,
-    FY19: 1700,
-  },
-  {
-    name: 'J',
-    BUDGET: 2000,
-    FY19: 1800,
-  },
-  {
-    name: 'A',
-    BUDGET: 2100,
-    FY19: 1870,
-  },
-  {
-    name: 'S',
-    BUDGET: 2130,
-    FY19: 1980,
-  },
-  {
-    name: 'O',
-    BUDGET: 2200,
-    FY19: 2030,
-  },
-  {
-    name: 'N',
-    BUDGET: 2300,
-    FY19: 2090,
-  },
-  {
-    name: 'D',
-    BUDGET: 2700,
-    FY19: 2400,
+    name: '',
+    Gap: 'Gap',
+    Pipeline: 1300,
+    'Stock of Work': 1600,
+    Revenue: 400,
   },
 ];
-const CustomizedAxisTick = props => {
-  const { x, y, payload } = props;
 
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text dy={16} textAnchor="middle" fill="#666">
-        {payload.value}
-      </text>
-    </g>
-  );
-};
 export default function _BarChart() {
   return (
-    <ResponsiveContainer width={'100%'} height={300}>
+    <ResponsiveContainer width={'100%'} height={400}>
       <BarChart
         data={data}
         margin={{
@@ -97,19 +38,16 @@ export default function _BarChart() {
           bottom: 5,
         }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="name"
-          allowDecimals={false}
-          tick={<CustomizedAxisTick />}
-        />
-        <YAxis />
+        <XAxis dataKey="name" tick={null} />
+        <YAxis domain={[0, 4500]} />
         <Tooltip />
-        <Bar dataKey="BUDGET" stackId="a" fill="rgb(246, 150, 30)" />
-        <Bar dataKey="FY19" stackId="a" fill="#8884d8" />
-        <Bar dataKey="ACTVAL" stackId="a" fill="#82ca9d" />
+        <Bar dataKey="Revenue" stackId="a" fill="#82ca9d" />
+        <Bar dataKey="Stock of Work" stackId="a" fill="rgb(246, 150, 30)" />
+        <Bar dataKey="Pipeline" stackId="a" fill="#8884d8">
+          <LabelList dataKey="Gap" position="top"></LabelList>
+        </Bar>
         <ReferenceLine
-          y={3000}
+          y={4000}
           label={{
             position: 'right',
             value: 'Tqt',
@@ -120,6 +58,7 @@ export default function _BarChart() {
           stroke="red"
           strokeDasharray="3 3"
         />
+        <Legend layout="vertical" align="right" verticalAlign="middle" />
       </BarChart>
     </ResponsiveContainer>
   );
