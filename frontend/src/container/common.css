@@ -1,0 +1,60 @@
+.SpeedoMeterLabel {
+    font-size: 23px;
+    margin: 10px;
+    text-decoration: underline;
+}
+.SpeedoMeterDesc{
+    font-size: 20px;
+    color:#ed719e;
+    margin: 10px;
+}
+.speedometerContainer {
+    padding: 20px !important;
+    border: 1px solid #e0e0e0;
+    margin-top: 50px !important;
+    border-radius: 5px;
+}
+.speedometerContainer h2 {
+    margin: 0 0 20px 0;
+}
+.speedometerWidth{
+    width: 80%;
+    margin:0px auto
+}
+.stackedContainer {
+    padding: 10px !important;
+    margin-top: 40px !important;
+}
+.stackedContainer h2{
+    border-bottom: 2px solid #333;
+}
+
+.key-success {
+    border: 1px solid #399179;
+    padding: 20px;
+    margin-top: 30px !important;
+    min-height: 200px;
+    border-radius: 5px;
+}
+.key-success ul {
+    margin: 0;
+    padding: 0 5px;
+}
+.key-success li {
+    list-style: none;
+}
+.key-success li::before {
+    content: "";
+    height: 5px;
+    width: 5px;
+    background: #399179;
+    display: inline-block;
+    border-radius: 50%;
+}
+.speedometerrow h3 {
+    float: right;
+    width: 27%;
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
