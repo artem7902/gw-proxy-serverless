@@ -6,6 +6,12 @@ from osbot_utils.utils.Files import Files
 
 class test_Firefox_Send(TestCase):
 
+    def test_download(self):
+        from osbot_utils.utils.Http import GET
+        #print(GET('https://srv-file4.gofile.io/download/ePB3QX/aa-some-text.txt'))
+        bytes = GET('https://srv-file7.gofile.io/download/UL8zkd/JS_Siemens-original.pdf',encoding=None)
+        print(Files.save_bytes_as_file('/tmp/temp-2.pdf',bytes))
+
     def test_sending_files_to_firefox_send(self):
         print('-------')
         file_metadata = Files.file_contents('/tmp/_firefox_send__file_metadata')

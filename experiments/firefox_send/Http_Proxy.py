@@ -16,30 +16,23 @@ class Http_Proxy:
 
     # todo: refactor to use solution like the one at Response_Handler
     def apply_transformations(self, response_body, response_headers):
-        target_files = ['application/javascript','text/html; charset=utf-8', 'text/html']
-        if response_headers.get('Content-Type','').lower() in target_files:
-            port   = 443
-            target = 'gofile.io'
-            content = response_body.decode()            
+        if response_headers.get('Content-Type','').lower() == 'text/html; charset=utf-8':  #todo: change headers to lower case
+
+            content = response_body.decode()
+
             ###### transformation 1 : replace server urls
-            local_server     = f'localhost:{port}'
-            local_url        = f'https://{local_server}'
-            #local_websocket  = f'ws://{local_server}'
+            local_server = 'https://demo-local.pydio.com'
+            target_server = 'https://demo.pydio.com'
+            content = content.replace(target_server, local_server)
+            content = content.replace('demo.pydio.com', 'demo-local.pydio.com')
 
-            api_server    = f'apiv2.{target}'
-            api_url       = f'https://{api_server}'
+            target_server = 'https://glasswallsolutions.com'
+            content = content.replace(target_server, local_server)
 
-            content = content.replace(api_url       , local_url   )
-            content = content.replace(api_server    , local_server)
+            local_server = 'http://127.0.0.1:12345/'
+            target_server = 'https://send.firefox.com/'
 
-            content = content.replace(f'https://{target}', f'https://{target}:{port}/')
-            content = content.replace('apiv2'            , f'localhost:{port}/')
-
-
-            # target_server = 'https://glasswallsolutions.com'
-            # content = content.replace(target_server, local_server)
-            # content = content.replace(target_server, local_server)
-
+            content = content.replace(target_server, local_server)
 
             return content.encode()
 
@@ -132,8 +125,6 @@ class Http_Proxy:
         try:
             #if self.headers.get('Content-Type') =='application/x-www-form-urlencoded' and type(self.body) is bytes:
             #    self.body = self.body.decode()
-            print(' .... in requests post **************')
-            #print(f' .... in requests post: {self.body}')
             response = requests.post(self.target, data=self.body, headers=self.request_headers(), verify=self.verify_ssl)
             return self.parse_response(response)
         except Exception as error:
