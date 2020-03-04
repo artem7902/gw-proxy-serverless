@@ -10,7 +10,7 @@ class test_Firefox_Send(TestCase):
         from osbot_utils.utils.Http import GET
         #print(GET('https://srv-file4.gofile.io/download/ePB3QX/aa-some-text.txt'))
         bytes = GET('https://srv-file7.gofile.io/download/UL8zkd/JS_Siemens-original.pdf',encoding=None)
-        print(Files.save_bytes_as_file('/tmp/temp-2.pdf',bytes))
+        print(Files.save_bytes_as_file(bytes, '/tmp/temp-2.pdf'))
 
     def test_sending_files_to_firefox_send(self):
         print('-------')

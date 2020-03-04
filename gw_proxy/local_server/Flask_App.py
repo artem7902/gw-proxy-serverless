@@ -1,10 +1,11 @@
 import json
 import sys
-
 import urllib3
 
 sys.path.append('.')
 sys.path.append('./modules/OSBot-Utils')
+
+from gw_proxy.gw.GW_Rebuild_Azure import GW_Rebuild_Azure
 from osbot_utils.utils.Http import GET, GET_Json
 from osbot_utils.utils.Files import Files
 from flask import Flask,request,redirect,Response
@@ -32,14 +33,14 @@ def download():
 #download?server=srv-file4&params=.gofile.io/getUpload&c=KLURWK
     url = f'https://{server_name}{params}?c={file_id}'
     data = GET(url)
-    print(data)
+    #print(data)
     return Response(data, 201, headers)
 
 @app.route('/getServer')
 def getServer():
     key = request.args.get('c')
     target_url = f'https://apiv2.gofile.io/getServer?c={key}'
-    print(target_url)
+    #print(target_url)
     result     = GET(target_url)
     server     = json.loads(result).get('data').get('server')
     fixed_data= f'{{"status": "ok", "data": {{"server": "localhost/download?server={server}&params=" }} }}'
@@ -81,7 +82,7 @@ def upload():
             if multipart_form_data is None:
                 multipart_form_data = (('filesUploaded', (file_name, open(file_path, 'rb') ,content_type)),)
             else:
-                multipart_form_data = (*multipart_form_data, ('filesUploaded', (file_name, open(file_path, 'rb'))))
+                multipart_form_data = (*multipart_form_data, ('filesUploaded', (file_name, open(file_path, 'rb'),content_type)))
 
         #print(multipart_form_data)
         urllib3.disable_warnings()
@@ -91,18 +92,30 @@ def upload():
         print(f">>>> {result}")
         return result
 
+    def rebuild_files(targets):
+        gw_azure = GW_Rebuild_Azure()
+        rebuilds = []
+        for file_name, content_type, file_path in targets:
+            print(f'\n########## Rebuilding file: {file_name}')
+            bytes = gw_azure.file_protect(file_path)
+            if len(bytes) > 0:
+                rebuilt_file = Files.save_bytes_as_file(bytes)
+                print(f'########## File rebuild ok\n\n')
+                rebuilds.append((file_name, content_type, rebuilt_file))
+            else:
+                print(f'########## File NOT rebuilt, using original \n')
+                rebuilds.append((file_name, content_type, file_path))
+        return rebuilds
+
     headers = {'content-type': 'application/json; charset=utf-8', 'status': 200}
     try:
-
-        # print('------------')
-        # print(request.get_data())
-        # print('------------')
-        files_to_save = []
+        files_to_rebuild = []
         for file in request.files.getlist('filesUploaded'):
             temp_file = Files.temp_file()
             file.save(temp_file)
-            files_to_save.append((file.filename, file.content_type, temp_file))
+            files_to_rebuild.append((file.filename, file.content_type, temp_file))
 
+        files_to_save = rebuild_files(files_to_rebuild)
         data = save_to_gofile(files_to_save)
 
         return Response(data, 200, headers)

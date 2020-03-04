@@ -70,10 +70,10 @@ def echo_socket(ws):
         #         , json=True, namespace='/api/ws')
         print('>>>>> all done')
 
-        print(Files.save_string_as_file('/tmp/_firefox_send__file_metadata', json.dumps(file_metadata)))
-        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_1', ws.receive()))
-        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_2', ws.receive()))
-        print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_3', ws.receive()))
+        #print(Files.save_string_as_file('/tmp/_firefox_send__file_metadata', json.dumps(file_metadata)))
+        #print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_1', ws.receive()))
+        #print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_2', ws.receive()))
+        #print(Files.save_bytes_as_file('/tmp/_firefox_send__bytes_3', ws.receive()))
 
         # while True:
         #     bytes = ws.receive()

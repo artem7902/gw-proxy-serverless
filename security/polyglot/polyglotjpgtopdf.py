@@ -13,7 +13,7 @@ zip_file = open(args.zipfile, 'rb')
 zip_data = zip_file.read()
 zip_file.close()
 
-new_file = open('new-image.jpg', 'wb')
+new_file = open('polyglot/new-image.jpg', 'wb')
 new_file.write(jpg_data)
 new_file.write(zip_data)
 new_file.close()
