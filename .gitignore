@@ -1,2 +1,8 @@
 .idea
 gw_proxy/layers/**/*
+*.pem
+*.crt
+*.key
+.mypy_cache
+__pycache__
+.pytest_cache
