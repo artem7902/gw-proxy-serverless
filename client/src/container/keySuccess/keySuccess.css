@@ -1,0 +1,16 @@
+.key-success-field {
+    background: #fff;
+    padding:17px;
+    border: 1px solid #ccc;    
+    box-shadow: 0px 0px 5px #ccc;
+    border-radius: 5px;
+    min-height: 400px;
+}
+
+.key-success-field h2{
+    font-weight: normal;
+    color: #508776;
+    border-bottom: 1px solid #508776;
+    padding-bottom: 5px;
+    margin: 0 0 15px 0;
+}
