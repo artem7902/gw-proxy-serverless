@@ -40,11 +40,17 @@ at this stage it is ok for multiple resources to be allocated to the same issue,
 
 
 ### How to start working in GITHub
-Please fork the master branch to your github
-work and push to your repo, new branch and create PR against filetrust/gw-proxy-serverless
-Put GITHub Issue reference number in PR
-Don't submit large numbers of files on your PR, only the files that are required. Having 265 files in PR makes it impossible to review. 
+Fork repo from https://github.com/filetrust/gw-proxy-serverless
+Clone forked repo
+Create new branch from master. For example: issue-number-relevant-branch-name (60-wireframe-6)
+Commit & push all your work to new branch you created before
+Create PR from your forked repo branch (60-wireframe-6) to base repo (master). While creating repo, kindly mention in leave a comment section "closes #60". The closes keyword will close the issue once it is merged and #60 is referencing the issue.
+filetrust/gw-proxy-serverless
+
+Notes: Don't submit large numbers of files on your PR, only the files that are required. Having 265 files in PR makes it impossible to review. 
 To help with reviewing the PRs please add the screenshots and comments of what supposed to be reviewed to the issue
+Think of the reviewer flow while submitting for review
+![image (13)](https://user-images.githubusercontent.com/10744307/75972399-a6eece00-5ed3-11ea-9661-77113ef9bbdc.png)
 
 ### GITHub Boards Descriptions(Backlog, Todo, In Progress, Done)
 
