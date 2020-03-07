@@ -1,0 +1,30 @@
+/* .App {
+  padding: 20px;
+} */
+
+.text-underline {
+  text-decoration: underline;
+  margin-top: 20px;
+}
+
+.content {
+  margin: 16px;
+  padding: 24px;
+  border-radius: 5px;
+  background: white;
+}
+
+.text-pink {
+  color: pink;
+}
+
+.ant-card-bordered {
+  border: 1px solid green !important;
+  border-radius: 5px !important;
+  padding: 0 20px !important;
+}
+
+.ant-card-head {
+  border-bottom: 2px solid #555 !important;
+  padding-left: 0 !important;
+}
