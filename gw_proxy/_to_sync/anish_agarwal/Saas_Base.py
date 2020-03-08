@@ -47,7 +47,10 @@ class Saas_Base:
         response_headers = {}
         response_body = response.content
         for key, value in response.headers.items():  # the original value of result.headers is not serializable
-            if key != 'Content-Encoding':
+            if key == 'Content-Encoding':
+                if str(value) == Proxy_Const.CONST_HEADER_BROTLI_ENCODING:
+                    response_headers[key] = str(value)
+            else:
                 response_headers[key] = str(value)
         content_type = response_headers.get('Content-Type')
 
