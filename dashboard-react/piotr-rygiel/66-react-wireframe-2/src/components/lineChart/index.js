@@ -7,15 +7,9 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  BarChart,
-  Bar,
-  Cell,
-  Text,
-  ReferenceLine,
   ResponsiveContainer,
 } from 'recharts';
 
-const legendValues = [''];
 const ACTVAL_COLOR = '#449580';
 const FORECAST_COLOR = '#343434';
 const BUDGET_COLOR = '#f0916a';
@@ -119,8 +113,6 @@ export default function _LineChart({ revenue }) {
   });
 
   const renderLegend = props => {
-    const { payload } = props;
-
     return (
       <div
         style={{
@@ -148,19 +140,7 @@ export default function _LineChart({ revenue }) {
       </div>
     );
   };
-  const renderLegend2 = props => {
-    const { payload } = props;
 
-    return (
-      <ul>
-        {payload.map((entry, index) => (
-          <li className="legend-item" key={`item-${index}`}>
-            {entry.value}
-          </li>
-        ))}
-      </ul>
-    );
-  };
   const handleMouseEnter = o => {
     console.log('legend over', o);
     // const { dataKey } = o;

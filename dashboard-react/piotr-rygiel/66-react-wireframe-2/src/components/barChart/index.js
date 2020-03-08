@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   BarChart,
   Bar,
-  Cell,
-  Text,
   ReferenceLine,
   ResponsiveContainer,
 } from 'recharts';

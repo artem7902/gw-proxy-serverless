@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import ReactSpeedometer from 'react-d3-speedometer';
 import LineChart from './components/lineChart';
@@ -9,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css';
 
 import { Row, Col, Container } from 'reactstrap';
-import { Card, Icon } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 
 function App() {
   return (
