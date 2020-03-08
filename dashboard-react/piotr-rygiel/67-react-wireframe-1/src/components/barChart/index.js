@@ -1,20 +1,15 @@
 import React from 'react';
 import {
-  Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
   BarChart,
   Bar,
-  Cell,
-  Text,
   ReferenceLine,
   ResponsiveContainer,
   LabelList,
 } from 'recharts';
-import { Label } from 'semantic-ui-react';
 
 const data = [
   {
