@@ -1,0 +1,54 @@
+#wrapper {
+  position: relative;
+  margin: auto;
+  height: inherit;
+  width: inherit;
+}
+#wrapperForWealth {
+  position: relative;
+  width: inherit;
+  height: 216px;
+  text-align: center;
+  margin-top: 20px;
+}
+.indicators {
+  position: absolute;
+  top: 124px;
+  width: 100%;
+}
+.yourScore {
+  color: #09c199;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.centerLabel {
+  font-size: 24px;
+  color: #000;
+  left: 112px;
+}
+.sidelabels {
+  color: #969cb5;
+  font-size: 16px;
+}
+.labels {
+  display: flex;
+  justify-content: space-around;
+}
+#meter {
+  width: 100%;
+  height: 100%;
+  transform: rotateX(180deg);
+}
+#meter_needle {
+  height: 76px;
+  left: 68px;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 36px;
+  transform-origin: bottom left;
+  transform: rotate(270deg);
+}
+.speedometer {
+  height: 250px;
+}
