@@ -1,0 +1,39 @@
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+  color: white;
+  text-align: center;
+  padding: 5px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.site-layout-height {
+  min-height: 100vh;
+  transition: width 0.5s;
+}
+
+.site-layout-height.collapsed {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .site-layout-height {
+    display: none;
+  }
+}

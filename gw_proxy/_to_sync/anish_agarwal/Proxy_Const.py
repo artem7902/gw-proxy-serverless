@@ -17,7 +17,8 @@ CONST_BINARY_TYPES             = [  "application/octet-stream"  ,
                                     "image/webp"                ,
                                     "image/jp2"                 ,
                                     'font/woff'                 ,
-                                    'font/woff2'                ]
+                                    'font/woff2'                ,
+                                    'text/html; charset=UTF-8'  ]
 
 CONST_ORIGINAL_GW_SITE         = 'glasswallsolutions.com'
 CONST_REPLACED_GW_SITE         = 'glasswall.gw-proxy.com'
@@ -38,6 +39,8 @@ CONST_REPLACED_ANGER           = 'BAE STOP with "Glasswall Inside" available in 
 
 CONST_US_CAR_GIANT             = 'The move comes as the US car giant ' 'retreats from more markets to focus on more profitable countries.'
 CONST_REPLACED_US_CAR_GIANT    = 'Product available for pre-order at the <a href="http://glasswall-store.com/">Glasswall Store</a>'
+
+CONST_HEADER_BROTLI_ENCODING   = 'br'
 
 RESPONSE_BAD_REQUEST           = 'Request body was invalid'
 RESPONSE_SERVER_ERROR          = 'A server error was encountered while processing the request'

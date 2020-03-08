@@ -1,0 +1,32 @@
+body{
+    counter-reset: my-sec-counter;
+}
+.deci-req-field {
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 5px;
+    padding:17px;
+    box-shadow: 0px 0px 5px #ccc;
+    margin-bottom: 20px;
+    
+}
+.deci-req-field h2{
+    font-weight: normal;
+    border-bottom: 1px solid #ff62c6;
+    padding-bottom: 5px;
+    color: #ff62c6;
+    margin:0 0 15px 0;
+}
+.deci-req-field ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.deci-req-field ul li{
+    margin: 10px 0;
+}
+.deci-req-field ul li::before {
+    content: counter(my-sec-counter) " ";
+    height: 10px;
+    counter-increment: my-sec-counter;
+}

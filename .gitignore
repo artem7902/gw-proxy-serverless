@@ -6,3 +6,4 @@ gw_proxy/layers/**/*
 .mypy_cache
 __pycache__
 .pytest_cache
+node_modules
