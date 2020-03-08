@@ -1,0 +1,42 @@
+body {
+
+  font-family: sans-serif;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 48px;
+  height: fit-content;
+  margin-top: 20px;
+  box-shadow: inset 0 -0.075em white,
+    inset 0 -0.1em black,
+    inset 0 -0.15em white,
+    inset 0 -0.175em black;
+}
+
+
+.subtitle {
+  font-size: 24px;
+  text-decoration: underline;
+}
+
+.top-ten-projects {
+  &-footer {
+    display: flex;
+    margin-left: auto;
+    justify-content: flex-end;
+    font-size: 18px;
+    color: #121212;
+    margin: 20px 0;
+  }
+
+  &-label {
+    width: 150px;
+  }
+
+  &-value {
+    width: 160px;
+    border-bottom: 1px solid #232323;
+  }
+}
