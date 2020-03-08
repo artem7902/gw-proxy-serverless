@@ -1,0 +1,27 @@
+body {
+  font-family: sans-serif;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 10px 0;
+  line-height: 48px;
+  border-bottom: 2px solid #565656;
+}
+
+.subtitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin: 10px 0;
+  line-height: 36px;
+  border-bottom: 2px solid #565656;
+  width: fit-content;
+}
+
+.products {
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
