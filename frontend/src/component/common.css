@@ -1,0 +1,83 @@
+.LoginBtn .MuiButton-label {
+    color: #61DAFB;
+    padding: 15px 0;
+}
+.LoginBtn button {
+    float: right;
+}
+table {
+    border: 1px solid #e0e0e0;
+   
+}
+table th {
+    border: 1px solid #e0e0e0;
+    text-align: left!important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    background: #767676;
+    color: #fff !important;
+    text-align: center !important;
+    padding: 10px !important;
+}
+table td {
+    border: 1px solid #e0e0e0;
+    border-bottom: 0px!important;
+    text-align: left!important;
+}
+
+.margin-b20{
+    margin-bottom: 20px;
+}
+
+.sub-total-data {
+    margin: 20px 0 5px 0;
+    text-align: right;
+    display: inline-block;
+    width: 100%;
+}
+
+.sub-total-data strong {
+    font-weight: normal;
+    color: #4D4D4D;
+}
+.progressTable h2 {
+    font-weight: normal;
+    margin-top: 5px;
+    font-size: 23px;
+}
+.notes-container h3 {
+    font-weight: normal;
+    margin: 0 0 20px 0 !important;
+    border-bottom: 1px solid #727272;
+    padding-bottom: 4px;
+}
+.b-num ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: add-num;
+}
+ 
+.b-num ul li {
+    margin: 20px 0 0 0px;
+} 
+.b-num ul li:before{
+    content:  counter(add-num) ;
+    counter-increment: add-num;
+}
+.b-alpha ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: listStyle;
+}
+.b-alpha ul li {
+    margin-left: 1em;
+    counter-increment: listStyle;
+    margin: 20px 0 0 0px;
+}
+
+.b-alpha ul li::before {
+    margin-right: 1em;
+    content: counter(listStyle, upper-alpha);
+}
