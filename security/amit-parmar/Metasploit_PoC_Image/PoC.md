@@ -1,4 +1,4 @@
-<h1>Preexploitation Phase</h2><br><br>
+<h1>PreExploitation Phase</h2><br><br>
 
 <h2>Setting up the listener : </h2><br>
 <img src="1.png"><br>
