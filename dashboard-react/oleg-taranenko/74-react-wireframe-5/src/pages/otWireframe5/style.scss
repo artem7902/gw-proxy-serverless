@@ -1,0 +1,21 @@
+$vertical-rotating-degree: -90deg;
+$vertical-label-transformation: rotate($vertical-rotating-degree) translate(490px, -295px);
+$horizontal-label-transformation: translate(150px);
+
+.vertical {
+  transform: $vertical-label-transformation;
+  -webkit-transform: $vertical-label-transformation;
+  -moz-transform: $vertical-label-transformation;
+  -o-transform: $vertical-label-transformation;
+  -ms-transform: $vertical-label-transformation;
+  white-space: nowrap;
+}
+
+.horizontal {
+  transform: $horizontal-label-transformation;
+  -webkit-transform: $horizontal-label-transformation;
+  -moz-transform: $horizontal-label-transformation;
+  -o-transform: $horizontal-label-transformation;
+  -ms-transform: $horizontal-label-transformation;
+  white-space: nowrap;
+}
