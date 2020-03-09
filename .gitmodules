@@ -4,6 +4,3 @@
 [submodule "modules/OSBot-AWS"]
 	path = modules/OSBot-AWS
     url = https://github.com/owasp-sbot/OSBot-AWS.git
-[submodule "modules/sdk-eval-toolset"]
-	path = modules/sdk-eval-toolset
-	url = https://github.com/filetrust/sdk-eval-toolset.git
