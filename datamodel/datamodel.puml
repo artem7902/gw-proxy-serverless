@@ -1,0 +1,31 @@
+@startuml
+skinparam activityFontSize 16
+skinparam activityDiamondFontSize 30
+skinparam activityArrowFontSize 24
+
+title __Coronavirus Decision Tree__
+
+(*) --> "Fever, cough, shortness\n of breath?" as A1
+
+--> "Contract with\n someone who is\n suspected to\n have or has\n <b>COVID-19?</b>"
+
+--> "Suspected <b>COVID-19</b>" as A2
+
+A1 --> "Travel to a country of high risk within the last 14 days:\n Cambodia, China, Hong Kong, Iran, Italy, Japan, Laos,\n Macau, Malaysia, Myanmar, Singapore, South\n Korea, Taiwan, Tenerife -only the H10\n Costa Adeje Palace Hotel, Thailand, Vietnam"
+
+--> A2
+
+--> "Call 111 and/or use 111 online service\n https://111.nhs.jk/covid-19 and follow instructions" as A3
+
+--> "Well enough to stay at home?\n self isolate from humans and\n animals for 14days"
+
+--> "If mild disease (80% cases) then\n self certify for sick leave\n up to 7 days and inform your manager\n and update Jira status" as A4
+
+--> "Feeling well after 7 days?\n Discuss remote work for the subsequent\n 7 days with your manager"
+
+A4 --> "Still symptomatic after 7 days?\n Call your GP, inform your manager and\n update Jira status"
+
+A3 --> "If unwell follow\n instructions how to\n seek medical attention"
+
+--> "Sick leave of unknown\n duration, likely 3-6 weeks\n for severe to critical illness,\n inform your manager"
+@enduml
