@@ -15,8 +15,7 @@ from gw_proxy.Globals import Globals as Proxy_Globals
 GITHUB_REPOSITORY_MAIN = 'filetrust/gw-proxy-serverless'
 GITHUB_REPOSITORY      = os.environ['GITHUB_REPOSITORY']
 GITHUB_REF             = os.environ['GITHUB_REF']
-
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))[0:-7]
+ROOT_PATH              = os.path.dirname(os.path.abspath(__file__))[0:-7]
 
 if not os.path.exists(f'{ROOT_PATH}/gw_proxy/layers'):
     os.mkdir(f'{ROOT_PATH}/gw_proxy/layers')
@@ -35,15 +34,18 @@ if not GITHUB_REPOSITORY == GITHUB_REPOSITORY_MAIN:
     for bucket in deployment_buckets:
         if not S3().bucket_exists(bucket):
             bucket_create_result = S3().bucket_create(bucket, Proxy_Globals.aws_session_region_name)
-            print(bucket + " bucket_create_result: " + bucket_create_result.get('data'))
 
 
 # Create deploy object
 deploy = Deploy(s3_bucket_lambdas, s3_bucket_lambda_layers, s3_bucket_website_copies)
 
 # Deploy lambda layers
-lambda_layer_version_arn_httrack          = deploy.deploy_lambda_layer_httrack()
-#lambda_layer_version_arn_glasswall_editor = deploy.deploy_lambda_layer_glasswall_editor()
+lambda_layer_version_arn_httrack            = deploy.deploy_lambda_layer_httrack()
+lambda_layer_version_arn_osbot_python_utils = deploy.deploy_lambda_layer_osbot_python_utils()
+lambda_layer_version_arn_osbot_utils        = deploy.deploy_lambda_layer_osbot_utils()
+lambda_layer_version_arn_osbot_aws          = deploy.deploy_lambda_layer_osbot_aws()
+# toDO The repo was deleted
+# lambda_layer_version_arn_glasswall_editor = deploy.deploy_lambda_layer_glasswall_editor()
 
 # Create IAM roles for lambdas
 assume_policy_document = {
@@ -71,10 +73,17 @@ policy_document__httrack_copy_website = {
 lambda_iam__httrack_copy_website = IAM(role_name="gw-proxy-httrack-copy-website-lambda-role")
 if not lambda_iam__httrack_copy_website.role_exists():
     lambda_iam__httrack_copy_website.role_create(assume_policy_document)
-policy_arn__httrack_copy_website = lambda_iam__httrack_copy_website.policy_create(policy_name = 'gw-proxy-httrack-copy-website-lambda-policy',
-                                               policy_document= policy_document__httrack_copy_website,
-                                               delete_before_create=True).get('policy_arn')
+policy_arn__httrack_copy_website = lambda_iam__httrack_copy_website.policy_create(
+                                               policy_name          = 'gw-proxy-httrack-copy-website-lambda-policy',
+                                               policy_document      = policy_document__httrack_copy_website,
+                                               delete_before_create = True)\
+                                   .get('policy_arn')
 lambda_iam__httrack_copy_website.role_policy_attach(policy_arn__httrack_copy_website)
+lambda_iam__httrack_copy_website.role_policy_attach("arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole")
 
 # Deploy lambdas
-deploy.deploy_lambda__httrack_copy_website(httrack_layer_version_arn=lambda_layer_version_arn_httrack, lambda_role_arn=lambda_iam__httrack_copy_website.role_arn())
+deploy.deploy_lambda__httrack_copy_website(lambda_layers   = [lambda_layer_version_arn_httrack,
+                                                              lambda_layer_version_arn_osbot_python_utils,
+                                                              lambda_layer_version_arn_osbot_utils,
+                                                              lambda_layer_version_arn_osbot_aws],
+                                           lambda_role_arn = lambda_iam__httrack_copy_website.role_arn())

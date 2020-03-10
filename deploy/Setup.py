@@ -13,16 +13,16 @@ class Setup:
         if region_name              : Osbot_Globals.aws_session_region_name  = region_name
         if lambda_s3_bucket         : Osbot_Globals.lambda_s3_bucket         = lambda_s3_bucket
         if lambda_role_name         : Osbot_Globals.lambda_role_name         = lambda_role_name
-        if lambda_layers_s3_bucket  : Proxy_Globals.s3_bucket_lambda_layers  = lambda_layers_s3_bucket
+        if lambda_layers_s3_bucket  : Osbot_Globals.lambda_layers_s3_bucket  = lambda_layers_s3_bucket
 
-        self.bot_name                = Osbot_Globals.bot_name
-        self.profile_name            = Osbot_Globals.aws_session_profile_name
-        self.region_name             = Osbot_Globals.aws_session_region_name
-        self.account_id              = Osbot_Globals.aws_session_account_id
-        self.s3_bucket_lambdas       = Osbot_Globals.lambda_s3_bucket
-        self.lambda_role_name        = Osbot_Globals.lambda_role_name
-        self.lambda_role_arn         = f"arn:aws:iam::{self.account_id}:role/{self.lambda_role_name}"
-        self.lambda_layers_s3_bucket = Proxy_Globals.s3_bucket_lambda_layers
+        self.bot_name                 = Osbot_Globals.bot_name
+        self.profile_name             = Osbot_Globals.aws_session_profile_name
+        self.region_name              = Osbot_Globals.aws_session_region_name
+        self.account_id               = Osbot_Globals.aws_session_account_id
+        self.s3_bucket_lambdas        = Osbot_Globals.lambda_s3_bucket
+        self.lambda_role_name         = Osbot_Globals.lambda_role_name
+        self.lambda_role_arn          = f"arn:aws:iam::{self.account_id}:role/{self.lambda_role_name}"
+        self.lambda_layers_s3_bucket  = Osbot_Globals.lambda_layers_s3_bucket
         self.s3_bucket_website_copies = Proxy_Globals.s3_bucket_website_copies
 
         self.s3                = S3()
